@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GPU Architecture</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            background: #ffffff;
+            color: #333333;
+            overflow: hidden;
+        }
+
+        .presentation-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+
+        .slide {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            display: none;
+            padding: 60px;
+            background: #ffffff;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            opacity: 1;
+        }
+
+        .slide-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            font-size: 3.5em;
+            color: #333333;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 2.5em;
+            color: #333333;
+            margin-bottom: 30px;
+        }
+
+        h3 {
+            font-size: 1.8em;
+            color: #444444;
+            margin-bottom: 20px;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .visual-content {
+            flex: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .text-content {
+            flex: 1;
+            font-size: 1.3em;
+            line-height: 1.8;
+        }
+
+        .navigation {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #007acc;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #005999;
+            transform: scale(1.05);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slide-number {
+            color: #666;
+            font-size: 1.2em;
+        }
+
+        .speaker-notes {
+            position: absolute;
+            bottom: 100px;
+            left: 60px;
+            right: 60px;
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            color: #666;
+            display: none;
+            max-height: 150px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+        }
+
+        .notes-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 5px 15px;
+            font-size: 0.9em;
+        }
+
+        /* Visual Elements */
+        .gpu-visual {
+            width: 600px;
+            height: 400px;
+            background: #f8f8f8;
+            border-radius: 20px;
+            border: 2px solid #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cpu-block, .gpu-block {
+            width: 250px;
+            height: 250px;
+            border-radius: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            padding: 10px;
+            position: relative;
+            border: 2px solid #999;
+        }
+
+        .cpu-block {
+            background: #fff3e0;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .gpu-block {
+            background: #e3f2fd;
+        }
+
+        .core {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            color: #333;
+            font-weight: bold;
+            border: 1px solid #ccc;
+        }
+
+        .cpu-core {
+            width: 80px;
+            height: 80px;
+            margin: 5px;
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .gpu-core {
+            width: 20px;
+            height: 20px;
+            background: #2196f3;
+        }
+
+        .restaurant-visual {
+            width: 700px;
+            height: 450px;
+            background: #f5f5f5;
+            border-radius: 20px;
+            padding: 30px;
+            position: relative;
+            border: 2px solid #ddd;
+        }
+
+        .waiter {
+            width: 40px;
+            height: 40px;
+            background: #ff9800;
+            border-radius: 50%;
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+            transition: all 0.5s;
+            color: white;
+            font-weight: bold;
+        }
+
+        .table {
+            width: 60px;
+            height: 60px;
+            background: #8b4513;
+            border-radius: 10px;
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        .sm-building {
+            width: 120px;
+            height: 150px;
+            background: #e8eaf6;
+            border: 2px solid #3f51b5;
+            border-radius: 10px;
+            margin: 10px;
+            padding: 10px;
+            display: inline-block;
+            position: relative;
+        }
+
+        .sm-label {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.9em;
+            color: #3f51b5;
+            font-weight: bold;
+        }
+
+        .warp-group {
+            background: #c5e1a5;
+            border: 1px solid #689f38;
+            border-radius: 5px;
+            padding: 5px;
+            margin: 5px 0;
+            font-size: 0.7em;
+        }
+
+        .memory-hierarchy {
+            width: 600px;
+            height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .memory-level {
+            width: 100%;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s;
+            border: 2px solid #666;
+        }
+
+        .memory-level:hover {
+            transform: scale(1.05);
+        }
+
+        .fastest { background: #ff5252; color: white; }
+        .fast { background: #ff9800; color: white; }
+        .medium { background: #ffeb3b; color: #333; }
+        .slow { background: #4caf50; color: white; }
+
+        .kernel-demo {
+            width: 700px;
+            height: 400px;
+            background: #f5f5f5;
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            gap: 30px;
+            border: 2px solid #ddd;
+        }
+
+        .code-section {
+            flex: 1;
+            background: #263238;
+            border-radius: 10px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #aed581;
+            overflow: auto;
+        }
+
+        .data-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 5px;
+            align-content: start;
+        }
+
+        .data-cell {
+            width: 40px;
+            height: 40px;
+            background: #fff;
+            border: 1px solid #999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            transition: all 0.3s;
+        }
+
+        .data-cell.processing {
+            background: #ffeb3b;
+            transform: scale(1.1);
+        }
+
+        .data-cell.processed {
+            background: #4caf50;
+            color: white;
+        }
+
+        .bullet-list {
+            font-size: 1.4em;
+            line-height: 2;
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .bullet-list li:before {
+            content: "• ";
+            color: #007acc;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .comparison-container {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .highlight-box {
+            background: #f5f5f5;
+            border: 2px solid #007acc;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .emphasis {
+            color: #007acc;
+            font-weight: bold;
+        }
+
+        .center-text {
+            text-align: center;
+        }
+
+        @keyframes parallel-process {
+            0% { background: #fff; }
+            50% { background: #ffeb3b; transform: scale(1.1); }
+            100% { background: #4caf50; color: white; }
+        }
+
+        .parallel-animate {
+            animation: parallel-process 1s ease-out;
+            animation-fill-mode: forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <button class="notes-toggle" onclick="toggleNotes()">Toggle Notes</button>
+
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <div class="center-text" style="display: flex; flex-direction: column; justify-content: center; height: 100%;">
+                <div>
+                    <h1>GPU Architecture</h1>
+                    <h3>Unlocking the Power of Parallel Processing</h3>
+                </div>
+                <div style="margin-top: 120px;">
+                    <p style="font-size: 1.5em; margin-bottom: 20px;">Data Analysis: Scientific Image Processing by GPU</p>
+                    <p style="font-size: 1.2em;">June 30 - July 4, 2025</p>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                Welcome to our session on GPU architecture. Today we will explore the fundamental concepts behind Graphics Processing Units and understand why they have become essential for scientific computing. By the end of this presentation, you will have a solid understanding of how GPUs work and why they are particularly suited for image processing tasks at facilities like Diamond Light Source.
+            </div>
+        </div>
+
+        <!-- Slide 2: Why GPUs? -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Why GPUs?</h2>
+            </div>
+            <div class="content">
+                <div class="visual-content">
+                    <img src="nvidia_a100_gpu.png" alt="NVIDIA A100 GPU" style="max-width: 500px; max-height: 300px; box-shadow: 0 5px 15px rgba(0,0,0,0.2);">
+                </div>
+                <div class="text-content">
+                    <ul class="bullet-list">
+                        <li>Originally designed for graphics rendering</li>
+                        <li>Excel at <span class="emphasis">parallel tasks</span></li>
+                        <li>Process millions of pixels simultaneously</li>
+                        <li>Now essential for scientific computing</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                The NVIDIA A100 shown here represents the current state-of-the-art in scientific computing GPUs. Originally, GPUs were designed specifically for rendering graphics in video games and visual applications. However, scientists recognised that the same parallel processing capabilities that make GPUs excellent at rendering millions of pixels could be applied to scientific data processing. Today, GPUs like the A100 accelerate everything from climate modeling to medical imaging analysis.
+            </div>
+        </div>
+
+        <!-- Slide 3: Learning Objectives -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>What You Will Learn</h2>
+            </div>
+            <div class="content">
+                <div class="visual-content">
+                    <div class="highlight-box" style="width: 600px;">
+                        <ul class="bullet-list">
+                            <li>CPU vs GPU architecture comparison</li>
+                            <li>Principles of parallel processing</li>
+                            <li>GPU component hierarchy and organisation</li>
+                            <li>CUDA programming model fundamentals</li>
+                            <li>Application to scientific image processing</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                These are our learning objectives for today. We will begin by comparing CPU and GPU architectures to understand their fundamental differences. Then we will explore how parallel processing works and examine the hierarchical organisation of GPU components. Finally, we will introduce the CUDA programming model and connect these concepts to the image processing work you will be doing this week.
+            </div>
+        </div>
+
+        <!-- Slide 4: CPU vs GPU Visual -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>CPU vs GPU: The Fundamental Difference</h2>
+            </div>
+            <div class="content">
+                <div class="visual-content">
+                    <div class="comparison-container">
+                        <div style="text-align: center;">
+                            <h3>CPU</h3>
+                            <div class="cpu-block">
+                                <div class="core cpu-core">Core 1</div>
+                                <div class="core cpu-core">Core 2</div>
+                                <div class="core cpu-core">Core 3</div>
+                                <div class="core cpu-core">Core 4</div>
+                            </div>
+                            <p style="margin-top: 20px;">Few powerful cores</p>
+                        </div>
+                        <div style="text-align: center;">
+                            <h3>GPU</h3>
+                            <div class="gpu-block">
+                                <!-- Generate many small cores -->
+                                <script>
+                                    document.write(Array(64).fill('<div class="core gpu-core"></div>').join(''));
+                                </script>
+                            </div>
+                            <p style="margin-top: 20px;">Many simple cores</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                This diagram illustrates the fundamental architectural difference between CPUs and GPUs. A modern CPU typically has 4 to 16 very powerful cores, each capable of executing complex instructions and handling sophisticated branching logic. In contrast, a GPU contains thousands of simpler cores designed to perform the same operation on multiple data points simultaneously. This design philosophy reflects their different purposes: CPUs for versatile sequential processing, GPUs for massive parallel processing.
+            </div>
+        </div>
+
+        <!-- Slide 6: Sequential Processing -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Sequential Processing (CPU)</h2>
+            </div>
+            <div class="content">
+                <div class="visual-content">
+                    <div class="restaurant-visual">
+                        <div class="table" style="top: 50px; left: 100px;">1</div>
+                        <div class="table" style="top: 50px; left: 300px;">2</div>
+                        <div class="table" style="top: 200px; left: 100px;">3</div>
+                        <div class="table" style="top: 200px; left: 300px;">4</div>
+                        <div class="waiter pulse" style="top: 45px; left: 45px;">C</div>
+                        <div style="position: absolute; bottom: 20px; left: 20px; right: 20px;">
+                            <p><strong>Super waiter visits each table sequentially</strong></p>
+                            <p>Total time: 4 tables × 10 minutes = <span class="emphasis">40 minutes</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                In sequential processing, our super waiter (representing a CPU core) visits each table one at a time. The waiter can handle any request, from complex molecular gastronomy to traditional cuisine. However, if each table requires 10 minutes of service and we have 4 tables, the total time is 40 minutes. This sequential approach is how CPUs process tasks: one after another, with great flexibility but limited parallelism.
+            </div>
+        </div>
+
+        <!-- Slide 7: Parallel Processing -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Parallel Processing (GPU)</h2>
+            </div>
+            <div class="content">
+                <div class="visual-content">
+                    <div class="restaurant-visual">
+                        <div class="table" style="top: 50px; left: 100px;">P</div>
+                        <div class="table" style="top: 50px; left: 300px;">P</div>
+                        <div class="table" style="top: 200px; left: 100px;">P</div>
+                        <div class="table" style="top: 200px; left: 300px;">P</div>
+                        <div class="waiter" style="top: 45px; left: 45px;">W</div>
+                        <div class="waiter" style="top: 45px; left: 245px;">W</div>
+                        <div class="waiter" style="top: 195px; left: 45px;">W</div>
+                        <div class="waiter" style="top: 195px; left: 245px;">W</div>
+                        <div style="position: absolute; bottom: 20px; left: 20px; right: 20px;">
+                            <p><strong>Each waiter serves one table simultaneously</strong></p>
+                            <p>Total time: <span class="emphasis">10 minutes</span> (all parallel)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                In parallel processing, we assign one waiter to each table. All waiters work simultaneously, serving identical pizzas. Since each pizza takes 10 minutes to prepare and serve, ALL tables are served in just 10 minutes total. This is the GPU approach: many simple processors working in parallel on identical tasks. The key insight is that when you have the same operation to perform on many data points, parallel processing provides dramatic speedup.
+            </div>
+        </div>
+
+        <!-- Slide 8: When to Use Each -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>When to Use CPU vs GPU</h2>
+            </div>
+            <div class="content">
+                <div class="visual-content">
+                    <div style="display: flex; gap: 40px;">
+                        <div class="highlight-box" style="flex: 1;">
+                            <h3 style="color: #d32f2f;">CPU Tasks</h3>
+                            <ul class="bullet-list">
+                                <li>Complex decision making</li>
+                                <li>Sequential dependencies</li>
+                                <li>Varied operations</li>
+                                <li>Operating system management</li>
+                            </ul>
+                        </div>
+                        <div class="highlight-box" style="flex: 1;">
+                            <h3 style="color: #1976d2;">GPU Tasks</h3>
+                            <ul class="bullet-list">
+                                <li>Same operation, many times</li>
+                                <li>Independent calculations</li>
+                                <li>Image/video processing</li>
+                                <li>Scientific simulations</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                Understanding when to use each processor type is crucial. CPUs excel at tasks requiring complex logic, branching decisions, or where one calculation depends on the previous result. GPUs are optimal when you need to perform the same operation on thousands or millions of data points independently. In scientific computing, this includes adjusting brightness on every pixel in an image, calculating forces on particles in a simulation, or processing signals from detector arrays.
+            </div>
+        </div>
+
+        <!-- Slide 9: GPU Architecture Overview -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>GPU Architecture: The Building Blocks</h2>
+            </div>
+            <div class="content">
+                <div class="visual-content">
+                    <div style="display: flex; flex-wrap: wrap; justify-content: center;">
+                        <div class="sm-building">
+                            <div class="sm-label">SM 0</div>
+                            <div class="warp-group">Warp 0</div>
+                            <div class="warp-group">Warp 1</div>
+                            <div class="warp-group">Warp 2</div>
+                        </div>
+                        <div class="sm-building">
+                            <div class="sm-label">SM 1</div>
+                            <div class="warp-group">Warp 0</div>
+                            <div class="warp-group">Warp 1</div>
+                            <div class="warp-group">Warp 2</div>
+                        </div>
+                        <div class="sm-building">
+                            <div class="sm-label">SM 2</div>
+                            <div class="warp-group">Warp 0</div>
+                            <div class="warp-group">Warp 1</div>
+                            <div class="warp-group">Warp 2</div>
+                        </div>
+                        <div class="sm-building">
+                            <div class="sm-label">SM 3</div>
+                            <div class="warp-group">Warp 0</div>
+                            <div class="warp-group">Warp 1</div>
+                            <div class="warp-group">Warp 2</div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; margin-top: 20px;"><strong>GPU = Collection of Streaming Multiprocessors (SMs)</strong></p>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                A GPU is organised as a collection of Streaming Multiprocessors (SMs). Think of each SM as an independent processing unit, like a building in our restaurant analogy. Each SM contains multiple warps, which are groups of threads that execute together. Modern GPUs like the A100 contain dozens of these SMs, allowing thousands of threads to run simultaneously. This hierarchical structure is fundamental to understanding GPU performance and programming.
+            </div>
+        </div>
+
+        <!-- Slide 10: Streaming Multiprocessors -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Inside a Streaming Multiprocessor</h2>
+            </div>
+            <div class="content">
+                <div class="visual-content">
+                    <div class="gpu-visual" style="flex-direction: column; padding: 30px;">
+                        <h3>SM Components</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%;">
+                            <div class="highlight-box">
+                                <h4>Cores</h4>
+                                <p>32-64 CUDA cores</p>
+                                <p>Execute instructions</p>
+                            </div>
+                            <div class="highlight-box">
+                                <h4>Schedulers</h4>
+                                <p>Manage warps</p>
+                                <p>Hide memory latency</p>
+                            </div>
+                            <div class="highlight-box">
+                                <h4>Registers</h4>
+                                <p>Ultra-fast storage</p>
+                                <p>Private to each thread</p>
+                            </div>
+                            <div class="highlight-box">
+                                <h4>Shared Memory</h4>
+                                <p>Fast local storage</p>
+                                <p>Shared within SM</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                Each Streaming Multiprocessor is a self-contained processing unit with several key components. The CUDA cores are the actual execution units that perform calculations. Schedulers manage groups of threads called warps, ensuring efficient execution and hiding memory access delays. Registers provide ultra-fast private storage for each thread's variables. Shared memory allows threads within an SM to communicate and share data efficiently. This architecture enables massive parallelism while maintaining efficiency.
+            </div>
+        </div>
+
+        <!-- Slide 11: Warps Concept -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Warps: Teams of 32 Threads</h2>
+            </div>
+            <div class="content">
+                <div class="visual-content">
+                    <div class="restaurant-visual">
+                        <h3 style="text-align: center;">Understanding Warps</h3>
+                        <div style="margin-top: 30px;">
+                            <div style="background: #e8f5e9; border: 2px solid #4caf50; padding: 20px; margin: 10px;">
+                                <h4>Warp: A Team of 32 Threads</h4>
+                                <p>32 threads moving in perfect synchronisation</p>
+                                <p>All execute the <span class="emphasis">same instruction</span> at the same time</p>
+                            </div>
+                            <div style="background: #e3f2fd; border: 2px solid #2196f3; padding: 20px; margin: 10px;">
+                                <h4>Key Concept: SIMD</h4>
+                                <p><strong>Single Instruction, Multiple Threads</strong></p>
+                                <p>One instruction controls 32 simultaneous operations</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                A warp is a fundamental execution unit in GPU architecture, consisting of exactly 32 threads that execute in lockstep. This means all 32 threads in a warp execute the same instruction at the same time on different data. This is called SIMD (Single Instruction, Multiple Data) execution. It is highly efficient because one instruction decoder can control 32 arithmetic operations simultaneously. Understanding warps is crucial for writing efficient GPU code.
+            </div>
+        </div>
+
+        <!-- Slide 12: Thread Hierarchy -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Thread Organisation Hierarchy</h2>
+            </div>
+            <div class="content">
+                <div class="visual-content">
+                    <div class="gpu-visual" style="padding: 30px;">
+                        <div style="text-align: center; width: 100%;">
+                            <div style="margin-bottom: 30px;">
+                                <h3>Grid</h3>
+                                <p>Complete collection of all blocks</p>
+                            </div>
+                            <div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 30px;">
+                                <div style="background: #e8eaf6; padding: 20px; border-radius: 10px; border: 2px solid #3f51b5;">
+                                    <h4>Block 0</h4>
+                                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px;">
+                                        <div style="width: 30px; height: 30px; background: #81c784; border: 1px solid #4caf50;"></div>
+                                        <div style="width: 30px; height: 30px; background: #81c784; border: 1px solid #4caf50;"></div>
+                                        <div style="width: 30px; height: 30px; background: #81c784; border: 1px solid #4caf50;"></div>
+                                        <div style="width: 30px; height: 30px; background: #81c784; border: 1px solid #4caf50;"></div>
+                                    </div>
+                                </div>
+                                <div style="background: #e8eaf6; padding: 20px; border-radius: 10px; border: 2px solid #3f51b5;">
+                                    <h4>Block 1</h4>
+                                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px;">
+                                        <div style="width: 30px; height: 30px; background: #64b5f6; border: 1px solid #2196f3;"></div>
+                                        <div style="width: 30px; height: 30px; background: #64b5f6; border: 1px solid #2196f3;"></div>
+                                        <div style="width: 30px; height: 30px; background: #64b5f6; border: 1px solid #2196f3;"></div>
+                                        <div style="width: 30px; height: 30px; background: #64b5f6; border: 1px solid #2196f3;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p><strong>Threads → Warps → Blocks → Grid</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                GPU threads are organised in a three-level hierarchy. Individual threads are the smallest execution unit. Threads are grouped into warps of 32 for SIMD execution. Multiple warps form a block, which can contain up to 1024 threads. Blocks are organised into a grid that represents your entire parallel computation. This hierarchy maps to the hardware: blocks execute on SMs, and the grid spans the entire GPU. Understanding this hierarchy is essential for writing efficient GPU programmes.
+            </div>
+        </div>
+
+        <!-- Slide 13: Memory Types -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>GPU Memory Hierarchy</h2>
+            </div>
+            <div class="content">
+                <div class="visual-content">
+                    <div class="memory-hierarchy">
+                        <div class="memory-level fastest">
+                            <h3>Registers</h3>
+                            <p>Fastest - Private to each thread</p>
+                        </div>
+                        <div class="memory-level fast">
+                            <h3>Shared Memory</h3>
+                            <p>Fast - Shared within block</p>
+                        </div>
+                        <div class="memory-level medium">
+                            <h3>L1/L2 Cache</h3>
+                            <p>Medium - Automatic caching</p>
+                        </div>
+                        <div class="memory-level slow">
+                            <h3>Global Memory</h3>
+                            <p>Slowest - Accessible by all threads</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                GPU memory is organised in a hierarchy based on speed and accessibility. Registers are the fastest memory, private to each thread, used for local variables. Shared memory is fast memory accessible by all threads within a block, useful for cooperation. L1 and L2 caches automatically cache frequently accessed data. Global memory is the largest but slowest, accessible by all threads across the GPU. Effective use of this hierarchy is crucial for performance - keeping data in faster memory levels dramatically improves execution speed.
+            </div>
+        </div>
+
+        <!-- Slide 14: CUDA Programming Model -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>CUDA Programming Model: SPMD</h2>
+            </div>
+            <div class="content">
+                <div class="visual-content">
+                    <div class="gpu-visual" style="padding: 30px;">
+                        <div style="text-align: center;">
+                            <h3>Single Programme, Multiple Data</h3>
+                            <div style="margin-top: 30px;">
+                                <div class="highlight-box">
+                                    <h4>The Kernel (Programme)</h4>
+                                    <pre style="margin: 10px 0;">output[i] = input[i] * 2 + 5</pre>
+                                </div>
+                                <p style="margin: 20px 0;">↓</p>
+                                <div style="display: flex; justify-content: center; gap: 10px;">
+                                    <div class="data-cell">Thread 0</div>
+                                    <div class="data-cell">Thread 1</div>
+                                    <div class="data-cell">Thread 2</div>
+                                    <div class="data-cell">...</div>
+                                    <div class="data-cell">Thread N</div>
+                                </div>
+                                <p style="margin-top: 20px;">Each thread executes the same programme on different data</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                SPMD (Single Programme, Multiple Data) is the fundamental programming model for GPUs. In CUDA, we write a single function called a kernel that defines what each thread should do. This same kernel runs on thousands of threads simultaneously, but each thread operates on different data. Each thread can determine its unique ID and use it to access its portion of the data. This simple yet powerful concept enables massive parallelism while keeping the programming model manageable.
+            </div>
+        </div>
+
+        <!-- Slide 15: Thread to Data Mapping -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Mapping Threads to Data</h2>
+            </div>
+            <div class="content">
+                <div class="visual-content">
+                    <div class="kernel-demo">
+                        <div class="code-section">
+                            <h4>Kernel Code</h4>
+                            <pre>// Each thread computes its index
+int i = blockIdx.x * blockDim.x + threadIdx.x;
+
+// Process element at index i
+output[i] = input[i] * 2;</pre>
+                        </div>
+                        <div>
+                            <h4>Parallel Processing Visualisation</h4>
+                            <div class="data-grid" id="dataGrid">
+                                <!-- Will be filled by JavaScript -->
+                            </div>
+                            <button style="margin-top: 20px;" onclick="animateParallelProcessing()">Demonstrate SPMD</button>
+                            <p style="margin-top: 10px; font-size: 0.9em;">All threads process simultaneously!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                Each thread calculates which data element it should process using its block ID and thread ID. This formula ensures every data element is processed by exactly one thread. The animation demonstrates the key concept of SPMD: all threads execute the same instruction at the same time, but on different data elements. This is fundamentally different from sequential processing where elements are handled one after another. Understanding this mapping is crucial for GPU programming.
+            </div>
+        </div>
+
+        <!-- Slide 16: Simple Kernel Example -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>Practical Example: Image Brightness</h2>
+            </div>
+            <div class="content">
+                <div class="visual-content">
+                    <div class="gpu-visual" style="width: 800px; padding: 30px; height: auto;">
+                        <h3>Image Brightness Adjustment</h3>
+                        <div style="display: flex; flex-direction: column; gap: 30px; margin-top: 30px;">
+                            <div>
+                                <h4>CPU Version</h4>
+                                <pre style="padding: 20px; font-size: 1.1em;">for i in range(height):
+    for j in range(width):
+        output[i][j] = input[i][j] * 1.5</pre>
+                                <p style="margin-top: 10px;">Sequential: each pixel processed one by one</p>
+                            </div>
+                            <div>
+                                <h4>GPU Kernel</h4>
+                                <pre style="padding: 20px; font-size: 1.1em;">int i = blockIdx.y * blockDim.y + threadIdx.y;
+int j = blockIdx.x * blockDim.x + threadIdx.x;
+output[i][j] = input[i][j] * 1.5;</pre>
+                                <p style="margin-top: 10px;">Parallel: <span class="emphasis">all pixels processed simultaneously</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                Here is a practical example comparing CPU and GPU approaches to image brightness adjustment. The CPU version uses nested loops to visit each pixel sequentially. For a 1920x1080 image, this means over 2 million sequential operations. The GPU kernel assigns one thread per pixel, allowing all pixels to be processed simultaneously. We use 2D thread indexing to match the 2D structure of the image. This parallel approach can be hundreds of times faster than the sequential version.
+            </div>
+        </div>
+
+        <!-- Slide 17: Real Applications -->
+        <div class="slide">
+            <div class="slide-header">
+                <h2>GPUs in Scientific Computing</h2>
+            </div>
+            <div class="content">
+                <div class="visual-content">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                        <div class="highlight-box">
+                            <h3>At Diamond Light Source</h3>
+                            <ul class="bullet-list" style="font-size: 1.1em;">
+                                <li>Process beamline images</li>
+                                <li>Noise reduction algorithms</li>
+                                <li>Feature detection</li>
+                                <li>Real-time data analysis</li>
+                            </ul>
+                        </div>
+                        <div class="highlight-box">
+                            <h3>Other Scientific Applications</h3>
+                            <ul class="bullet-list" style="font-size: 1.1em;">
+                                <li>Machine learning training</li>
+                                <li>Climate modeling</li>
+                                <li>Molecular dynamics</li>
+                                <li>Astronomical data processing</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="speaker-notes">
+                GPUs have revolutionised scientific computing across many fields. At Diamond Light Source, GPUs process millions of X-ray diffraction images from experimental beamlines, enabling real-time analysis that would take hours on CPUs. Beyond imaging, GPUs accelerate machine learning model training, enable detailed climate simulations, simulate molecular interactions for drug discovery, and process vast astronomical datasets. The parallel processing capabilities you have learned about today drive all these scientific breakthroughs.
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="navigation">
+            <button id="prevBtn" onclick="changeSlide(-1)">Previous</button>
+            <span class="slide-number" id="slideNumber">1 / 16</span>
+            <button id="nextBtn" onclick="changeSlide(1)">Next</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function showSlide(n) {
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+
+            document.getElementById('slideNumber').textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+
+            // Initialize data grid on slide 14
+            if (currentSlide === 13) {
+                initialisedataGrid();
+            }
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        function toggleNotes() {
+            const notes = document.querySelectorAll('.speaker-notes');
+            notes.forEach(note => {
+                note.style.display = note.style.display === 'block' ? 'none' : 'block';
+            });
+        }
+
+        function initialisedataGrid() {
+            const grid = document.getElementById('dataGrid');
+            if (grid && grid.children.length === 0) {
+                for (let i = 0; i < 32; i++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'data-cell';
+                    cell.textContent = i;
+                    grid.appendChild(cell);
+                }
+            }
+        }
+
+        function animateParallelProcessing() {
+            const cells = document.querySelectorAll('#dataGrid .data-cell');
+
+            // Reset all cells
+            cells.forEach(cell => {
+                cell.classList.remove('processing', 'processed', 'parallel-animate');
+            });
+
+            // Show all cells processing simultaneously (SPMD)
+            setTimeout(() => {
+                cells.forEach(cell => {
+                    cell.classList.add('parallel-animate');
+                });
+            }, 100);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+            if (e.key === 'n') toggleNotes();
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>
