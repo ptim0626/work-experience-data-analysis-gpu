@@ -1,0 +1,188 @@
+\documentclass[10pt, a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[UKenglish]{babel}
+\usepackage{csquotes}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage[landscape, margin=8mm, top=8mm, bottom=8mm]{geometry}
+\usepackage{multicol}
+\usepackage{tcolorbox}
+\usepackage{microtype}
+
+% remove page numbering
+\pagenumbering{gobble}
+
+% spacing
+\frenchspacing
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+
+% define colours
+\definecolor{termcolor}{RGB}{0, 102, 204}
+\definecolor{blockbg}{RGB}{248, 249, 250}
+\definecolor{sectionbg}{RGB}{224, 224, 224}
+\definecolor{analogycolor}{RGB}{85, 85, 85}
+\definecolor{examplecolor}{RGB}{102, 102, 102}
+
+% custom environment for term blocks with reduced padding
+\newtcolorbox{termblock}{
+    colback=blockbg,
+    colframe=termcolor,
+    boxrule=0pt,
+    leftrule=3pt,
+    arc=0pt,
+    outer arc=0pt,
+    left=6pt,
+    right=6pt,
+    top=4pt,
+    bottom=4pt,
+    boxsep=0pt,
+    before skip=6pt,
+    after skip=6pt
+}
+
+% custom commands for formatting with smaller sizes
+\newcommand{\term}[1]{\textcolor{termcolor}{\textbf{#1}}\par\vspace{1pt}}
+\newcommand{\definition}[1]{\small #1\par\vspace{1pt}}
+\newcommand{\analogy}[1]{\textcolor{analogycolor}{\textit{\footnotesize #1}}\par\vspace{1pt}}
+\newcommand{\example}[1]{\textcolor{examplecolor}{\footnotesize\texttt{#1}}\par}
+
+% section header command with reduced spacing
+\newcommand{\sectionheader}[1]{%
+    \vspace{4pt}%
+    \noindent\colorbox{sectionbg}{%
+        \makebox[\linewidth][c]{\textbf{\large #1}}%
+    }%
+    \vspace{4pt}%
+}
+
+% reduce column separation
+\setlength{\columnsep}{10pt}
+
+% document metadata
+\title{GPU/CUDA Programming Reference Card}
+\author{}
+\date{}
+
+\begin{document}
+
+% custom title without date
+\begin{center}
+    {\Large\textbf{GPU/CUDA Programming Reference Card}}
+    \vspace{2pt}
+    \hrule height 1.5pt
+\end{center}
+
+\vspace{6pt}
+
+\sectionheader{Core Concepts}
+
+\begin{multicols}{2}
+\raggedcolumns
+
+\begin{termblock}
+\term{Thread}
+\definition{A single worker that processes one piece of data independently}
+\analogy{Restaurant: One waiter handling one customer's order}
+\example{threadIdx.x = unique ID within block}
+\end{termblock}
+
+\begin{termblock}
+\term{Block}
+\definition{A group of threads that work together and can share memory}
+\analogy{Restaurant: All waiters in one dining section}
+\example{blockDim.x = threads per block (e.g., 256)}
+\end{termblock}
+
+\begin{termblock}
+\term{Grid}
+\definition{All blocks combined; the entire parallel computation}
+\analogy{Restaurant: The entire restaurant staff across all sections}
+\example{gridDim.x = number of blocks}
+\end{termblock}
+
+\begin{termblock}
+\term{Kernel}
+\definition{The programme that all threads execute in parallel}
+\analogy{Restaurant: The service protocol every waiter follows}
+\example{\_\_global\_\_ void myKernel(...)}
+\end{termblock}
+
+\begin{termblock}
+\term{Host}
+\definition{The CPU that controls and launches GPU operations}
+\analogy{Restaurant: The restaurant manager coordinating everything}
+\end{termblock}
+
+\begin{termblock}
+\term{Device}
+\definition{The GPU that performs parallel computations}
+\analogy{Restaurant: The entire service team doing the actual work}
+\end{termblock}
+
+\columnbreak
+
+\begin{termblock}
+\term{CUDA}
+\definition{NVIDIA's platform for parallel computing on GPUs}
+\example{Compute Unified Device Architecture}
+\end{termblock}
+
+\begin{termblock}
+\term{Warp}
+\definition{Exactly 32 threads that execute instructions together in lockstep}
+\analogy{Restaurant: A team of exactly 32 waiters who move in perfect synchronisation}
+\end{termblock}
+
+\begin{termblock}
+\term{Stream Multiprocessor (SM)}
+\definition{Hardware unit that executes warps of threads}
+\analogy{Restaurant: A floor supervisor managing multiple waiter teams}
+\end{termblock}
+
+\sectionheader{Programming Models}
+
+\begin{termblock}
+\term{SPMD}
+\definition{Single Programme, Multiple Data - same code runs on different data}
+\example{All threads run same kernel, process different pixels}
+\end{termblock}
+
+\begin{termblock}
+\term{SIMD}
+\definition{Single Instruction, Multiple Data - one instruction operates on multiple data points}
+\example{Add 1 to all array elements simultaneously}
+\end{termblock}
+
+\sectionheader{Memory Types}
+
+\begin{termblock}
+\term{Global Memory}
+\definition{Large memory accessible by all threads (slower)}
+\analogy{Restaurant: Central storage room all staff can access}
+\end{termblock}
+
+\begin{termblock}
+\term{Shared Memory}
+\definition{Fast memory shared within a block (limited size)}
+\analogy{Restaurant: Service station supplies for one section}
+\example{\_\_shared\_\_ float tile[16][16]}
+\end{termblock}
+
+\end{multicols}
+
+\vfill
+
+\begin{center}
+\footnotesize\textcolor{examplecolor}{Diamond Light Source - GPU Programming Work Experience | Keep for reference during your project}
+\end{center}
+
+\end{document}

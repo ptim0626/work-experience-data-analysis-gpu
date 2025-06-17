@@ -1,0 +1,211 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[UKenglish]{babel}
+\usepackage{csquotes}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage[a4paper, margin=2cm]{geometry}
+\usepackage{microtype}
+
+% remove page numbering
+\pagenumbering{gobble}
+
+% uniform spacing after punctuation
+\frenchspacing
+
+% configure listings for code
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    xleftmargin=2em,
+    framexleftmargin=1.5em,
+    showstringspaces=false,
+    extendedchars=false,
+    upquote=true,
+    literate={--}{{-{}-}}2,
+    language={}
+}
+
+% inline code command
+\newcommand{\code}[1]{\texttt{#1}}
+
+% checkbox command for checklist
+\newcommand{\checkbox}{$\square$}
+
+% document metadata
+\title{Terminal Navigation Exercises: Organising Your Project\\[0.5em]
+\large\textbf{Data Analysis: Scientific image processing by GPU}}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{Introduction}
+
+These exercises will guide you through essential terminal commands for navigating the file system and organising your project files. Complete each task in sequence and mark them as done.
+
+\section*{Exercise 1: Determining Your Location}
+
+Understanding your current location in the file system is fundamental.
+
+\begin{itemize}
+    \item Open terminal and type: \code{pwd}
+    \item You should see: \code{/home/<FEDID>}
+    \item This is your home directory
+\end{itemize}
+
+\textbf{Learning outcome:} The \code{pwd} command displays your \textit{p}resent \textit{w}orking \textit{d}irectory.
+
+\section*{Exercise 2: Creating Project Structure}
+
+Establish a proper workspace for your project.
+
+\begin{itemize}
+    \item Make project folder: \code{mkdir gpu\_work}
+    \item Type \code{cd gpu\_work}
+    \item Verify: \code{pwd} (should show \code{/home/<FEDID>/gpu\_work})
+\end{itemize}
+
+\textbf{Learning outcome:} \code{mkdir} creates directories, \code{cd} changes your current directory.
+
+\section*{Exercise 3: Organising Your Work}
+
+Create a logical folder structure for the project.
+
+\begin{itemize}
+    \item Create subfolders:
+\end{itemize}
+
+\begin{lstlisting}
+mkdir day2
+mkdir day3
+mkdir day4
+\end{lstlisting}
+
+\begin{itemize}
+    \item List them: \code{ls}
+    \item Make a test file: \code{nano README.txt}
+    \item Type: \enquote{My GPU Work Experience Project}
+    \item Save: \code{Ctrl+O}, \code{Enter}
+    \item Exit: \code{Ctrl+X}
+\end{itemize}
+
+\textbf{Learning outcome:} Creating multiple directories and using the \code{nano} text editor.
+
+\section*{Exercise 4: Directory Navigation}
+
+Practice moving between directories and creating files in different locations.
+
+\begin{itemize}
+    \item Go to day2: \code{cd day2}
+    \item Create file: \code{nano notes.txt}
+    \item Add: \enquote{Today I fell in love with GPUs!}
+    \item Save and exit
+    \item Go back up: \code{cd ..}
+    \item List everything: \code{ls -la}
+\end{itemize}
+
+\textbf{Learning outcome:} \code{cd ..} moves up one directory level, \code{ls -la} shows detailed file information including hidden files.
+
+\section*{Exercise 5: Job Submission Practice}
+
+Create and submit a job to the cluster with proper resource allocation.
+
+\begin{itemize}
+    \item Create: \code{nano test\_job.sh}
+    \item Type:
+\end{itemize}
+
+\begin{lstlisting}
+#!/usr/bin/env bash
+#SBATCH --job-name=test_gpu
+#SBATCH --partition=cs054r
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --time=00:05:00
+
+echo "Hello $(whoami)"
+echo 'You are running your script from the cluster.'
+date
+hostname
+\end{lstlisting}
+
+\begin{itemize}
+    \item Submit: \code{sbatch test\_job.sh}
+    \item Check status: \code{squeue -{}-me}
+    \item View output: \code{cat test\_*.out}
+\end{itemize}
+
+\textbf{Learning outcome:} Creating and submitting a batch job with resource specifications.
+
+\section*{Exercise 6: Copying Files}
+
+Learn to duplicate files and directories.
+
+\begin{itemize}
+    \item Return to gpu\_work directory: \code{cd \textasciitilde/gpu\_work}
+    \item Copy your README: \code{cp README.txt README\_backup.txt}
+    \item Verify: \code{ls}
+    \item Copy entire day2 folder: \code{cp -r day2 day2\_backup}
+    \item List to confirm: \code{ls -la}
+\end{itemize}
+
+\textbf{Learning outcome:} \code{cp} copies files, \code{-r} flag enables recursive copying for directories.
+
+\section*{Exercise 7: Moving and Renaming}
+
+Practice relocating and renaming files.
+
+\begin{itemize}
+    \item Move backup file to day2: \code{mv README\_backup.txt day2/}
+    \item Navigate to day1: \code{cd day2}
+    \item List contents: \code{ls}
+    \item Rename the file: \code{mv README\_backup.txt project\_info.txt}
+    \item Verify: \code{ls}
+\end{itemize}
+
+\textbf{Learning outcome:} \code{mv} serves dual purpose for moving files and renaming them.
+
+\section*{Exercise 8: Removing Files Safely}
+
+Learn to delete files and directories with caution.
+
+\begin{itemize}
+    \item Create test file: \code{nano temp.txt}
+    \item Add: \enquote{Temporary file for deletion}
+    \item Save and exit
+    \item Remove it: \code{rm temp.txt}
+    \item Confirm deletion: \code{ls}
+    \item Go back: \code{cd ..}
+    \item Remove backup directory: \code{rm -r day2\_backup}
+    \item Verify: \code{ls}
+\end{itemize}
+
+\textbf{Learning outcome:} \code{rm} \textbf{permanently} deletes files, \code{-r} flag removes directories recursively. Use with caution.
+
+\section*{Completion Checklist}
+
+Mark off completed tasks:
+
+\begin{itemize}[label=\checkbox]
+    \item Created project directory structure
+    \item Successfully navigated between directories
+    \item Created and edited files using nano
+    \item Submitted first cluster job with resource specifications
+    \item Viewed job output
+    \item Copied files and directories
+    \item Moved and renamed files
+    \item Safely removed unwanted files
+\end{itemize}
+\end{document}

@@ -1,0 +1,157 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[UKenglish]{babel}
+\usepackage{csquotes}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage[a4paper, margin=2cm]{geometry}
+
+% remove page numbering
+\pagenumbering{gobble}
+
+% uniform spacing after punctuation
+\frenchspacing
+
+% configure listings for code
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny,
+    xleftmargin=2em,
+    framexleftmargin=1.5em
+}
+
+% document metadata
+\title{The Mega Restaurant: Understanding GPU Parallel Processing}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{Welcome to MegaBites Restaurant}
+
+Imagine the world's largest restaurant with \textbf{1000 tables}, all occupied by hungry customers who have ordered simultaneously. Everyone expects prompt service. How can we efficiently serve them all?
+
+\subsection*{Option 1: The CPU Approach - \enquote{The Super-Waiter}}
+\begin{itemize}
+    \item ONE exceptionally fast waiter
+    \item Runs between all 1000 tables sequentially
+    \item Takes one order, rushes to kitchen, delivers food, proceeds to next table
+    \item Even at superhuman speed: 1000 tables × 2 minutes each = \textbf{over 33 hours}
+    \item Customers at table 1000 would experience unacceptable waiting times
+\end{itemize}
+
+\subsection*{Option 2: The GPU Approach - \enquote{The Parallel Service Team}}
+\begin{itemize}
+    \item 1000 waiters, each assigned to ONE specific table
+    \item All waiters work simultaneously (parallel processing)
+    \item Each follows identical service procedures
+    \item All 1000 tables served in just \textbf{2 minutes}
+    \item Every customer receives prompt, efficient service
+\end{itemize}
+
+\section*{The Computing Connection}
+
+\begin{table}[h!]
+\centering
+\begin{tabular}{ll}
+\toprule
+Restaurant Element & GPU Computing Equivalent \\
+\midrule
+Tables & Data elements (pixels, array values) \\
+Customer orders & Input data values to process \\
+Waiters & GPU threads (the workers) \\
+Kitchen storage & GPU memory (where all data is stored) \\
+Cooking stations & GPU cores (where processing happens) \\
+Waiter's notepad & Thread's registers (personal workspace) \\
+Restaurant manager & GPU scheduler (coordinates everything) \\
+Table numbers & Memory addresses (location identifiers) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section*{SPMD: Same Programme, Multiple Data}
+
+Every waiter follows this \textbf{identical} service protocol:
+
+\begin{lstlisting}
+1. Greet customers at assigned table
+2. Record their specific orders
+3. Submit order to kitchen with table identifier
+4. Collect prepared food for assigned table
+5. Serve the customers
+6. Process payment transaction
+\end{lstlisting}
+
+\textbf{The Key Principle:} Identical steps, different data
+\begin{itemize}
+    \item Waiter 42 processes orders from Table 42
+    \item Waiter 873 processes orders from Table 873
+    \item All executing simultaneously
+\end{itemize}
+
+In GPU terms: Each thread executes the same kernel code but operates on different data elements.
+
+\section*{Visual Representation: Parallel Service Timeline}
+
+\begin{verbatim}
+Time 00:00 - All waiters greet simultaneously
++----+----+----+----+----+
+| W1 | W2 | W3 | W4 | W5 |  W = Waiter at table
++----+----+----+----+----+
+| W6 | W7 | W8 | W9 | W10|  (Showing 15 of 1000)
++----+----+----+----+----+
+| W11| W12| W13| W14| W15|
++----+----+----+----+----+
+
+Time 00:01 - All taking orders simultaneously
++----+----+----+----+----+
+| O  | O  | O  | O  | O  |  O = Order taking
++----+----+----+----+----+
+| O  | O  | O  | O  | O  |
++----+----+----+----+----+
+| O  | O  | O  | O  | O  |
++----+----+----+----+----+
+
+Time 00:02 - All serving food simultaneously
++----+----+----+----+----+
+| V  | V  | V  | V  | V  |  V = Service complete
++----+----+----+----+----+
+| V  | V  | V  | V  | V  |
++----+----+----+----+----+
+| V  | V  | V  | V  | V  |
++----+----+----+----+----+
+\end{verbatim}
+
+\section*{GPU Computing: The Numbers}
+
+\textbf{Technical Specifications:}
+\begin{itemize}
+    \item Modern GPUs contain \textbf{10,000+ parallel processing threads}
+    \item NVIDIA RTX 4090: 16,384 CUDA cores
+    \item Processing a 4K image (8.3 million pixels): Each pixel receives dedicated processing
+    \item Typical performance: Billions of operations per second
+    \item Beamline application: Each X-ray detector pixel represents one \enquote{table} requiring service
+\end{itemize}
+
+\textbf{Performance Comparison:} A calculation requiring one hour on a CPU might complete in just two minutes on a GPU. This represents a 30× speed improvement through parallel processing.
+
+\par\noindent\rule{\linewidth}{0.4pt}\par
+
+\textbf{Key Concept:} GPUs excel when identical operations must be performed on large datasets - precisely like our restaurant scenario where every table requires the same service procedure but with unique customer orders.
+
+\textit{This parallel processing approach is fundamental to accelerating scientific image analysis at Diamond Light Source, where millions of detector pixels must be processed rapidly.}
+
+\end{document}

@@ -1,0 +1,129 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[UKenglish]{babel}
+\usepackage{csquotes}
+\usepackage{xcolor}
+\usepackage{geometry}
+\usepackage{tcolorbox}
+
+% page geometry
+\geometry{
+    a4paper,
+    margin=10mm,
+    top=15mm,
+    bottom=15mm
+}
+
+% remove page numbers
+\pagestyle{empty}
+
+% colours
+\definecolor{primaryblue}{HTML}{3498db}
+\definecolor{accentpurple}{HTML}{9b59b6}
+\definecolor{textprimary}{HTML}{2c3e50}
+\definecolor{textsecondary}{HTML}{7f8c8d}
+\definecolor{textmuted}{HTML}{34495e}
+\definecolor{backgroundgray}{HTML}{fafafa}
+\definecolor{bordergray}{HTML}{e0e0e0}
+
+% tcolorbox settings
+\tcbuselibrary{skins,breakable}
+
+% custom environment for day cards
+\newtcolorbox{daycard}[2]{
+    colframe=bordergray,
+    colback=backgroundgray,
+    colbacktitle=primaryblue,
+    coltitle=white,
+    fonttitle=\bfseries\large,
+    title={#1\hfill\tcbox[on line,boxrule=0pt,colback=blue!60!white,arc=3mm,left=3mm,right=3mm,top=1mm,bottom=1mm,fontupper=\color{white}\small]{#2}},
+    boxrule=1.5pt,
+    arc=3mm,
+    breakable,
+    enhanced
+}
+
+% spacing
+\frenchspacing
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.5em}
+
+% metadata
+\title{Data analysis: Scientific image processing by GPU}
+\author{Timothy Poon}
+\date{}
+
+\begin{document}
+
+% custom title section
+\begin{center}
+    {\LARGE\bfseries Data analysis: Scientific image processing by GPU}\\[0.5em]
+    {\large\color{textsecondary} Diamond Light Source • June 30 -- July 4, 2025}\\[0.3em]
+    {\color{textmuted} Morning meeting point: entrance of Diamond House}
+\end{center}
+
+\vspace{1em}
+{\color{accentpurple}\hrule height 2pt}
+\vspace{1.5em}
+
+% day 2
+\begin{daycard}{Day 2 (1/7 Tue): GPU Foundations \& CPU Kernels}{G53 (Diamond House)}
+\begin{tabular}{@{}p{2.8cm}p{\dimexpr\linewidth-3.1cm}@{}}
+\textbf{\color{textmuted}09:00--09:30} & Arrival \& Settling \\
+\textbf{\color{textmuted}09:30--10:00} & Welcome \& Introductions \\
+\textbf{\color{textmuted}10:00--11:00} & GPU Architecture \& CUDA Concepts \\
+\textbf{\color{textmuted}11:00--12:00} & Introduction to HPC Systems \\
+\textbf{\color{textmuted}12:00--13:00} & \textbf{Lunch Break} \\
+\textbf{\color{textmuted}13:00--14:00} & First CUDA Program on HPC \\
+\textbf{\color{textmuted}14:00--16:00} & Understanding Kernels on CPU \\
+\textbf{\color{textmuted}16:00--17:00} & Q\&A and Wrap-up \\[0.3em]
+& \textit{\color{textsecondary}Breaks every hour}
+\end{tabular}
+\end{daycard}
+
+\vspace{1em}
+
+% day 3
+\begin{daycard}{Day 3 (2/7 Wed): GPU Kernels (Morning Only)}{MR 1-10 (i14 external building)}
+\begin{tabular}{@{}p{2.8cm}p{\dimexpr\linewidth-3.1cm}@{}}
+\textbf{\color{textmuted}09:00--09:30} & Arrival \& Settling \\
+\textbf{\color{textmuted}09:30--10:30} & 2D Kernels on CPU \\
+\textbf{\color{textmuted}10:30--11:30} & Transition to GPU Kernels with CuPy \\
+\textbf{\color{textmuted}11:30--12:00} & Q\&A and Wrap-up \\
+\textbf{\color{textmuted}12:00} & \textbf{Lunch Break} \\[0.3em]
+& \textit{\color{textsecondary}Breaks every hour}
+\end{tabular}
+\end{daycard}
+
+\vspace{1em}
+
+% day 4
+\begin{daycard}{Day 4 (3/7 Thu): Real Data Processing}{G53 (Diamond House)}
+\begin{tabular}{@{}p{2.8cm}p{\dimexpr\linewidth-3.1cm}@{}}
+\textbf{\color{textmuted}09:00--09:30} & Arrival \& Settling \\
+\textbf{\color{textmuted}09:30--11:00} & GPU Kernels on Dummy Data \\
+\textbf{\color{textmuted}11:00--12:00} & Load Experimental Beamline Data \\
+\textbf{\color{textmuted}12:00--13:00} & \textbf{Lunch Break} \\
+\textbf{\color{textmuted}13:00--14:00} & Process Real Experimental Data \\
+\textbf{\color{textmuted}14:00--15:00} & Data Visualization \\
+\textbf{\color{textmuted}15:00--16:30} & Advanced Processing \& Analysis \\
+\textbf{\color{textmuted}16:30--17:00} & Q\&A and Wrap-up \\[0.3em]
+& \textit{\color{textsecondary}Breaks every hour}
+\end{tabular}
+\end{daycard}
+
+\vspace{1em}
+
+% day 5
+\begin{daycard}{Day 5 (4/7 Fri): Presentations}{MR 1.25 (Diamond Ring)}
+\begin{tabular}{@{}p{2.8cm}p{\dimexpr\linewidth-3.1cm}@{}}
+\textbf{\color{textmuted}09:00--09:30} & Arrival \& Settling \\
+\textbf{\color{textmuted}09:30--12:00} & Presentation Preparation \& Practice \\
+\textbf{\color{textmuted}12:00--13:00} & \textbf{Lunch Break} \\
+\textbf{\color{textmuted}13:00--16:00} & Student Presentations to Guests \\[0.3em]
+& \textit{\color{textsecondary}Breaks every hour}
+\end{tabular}
+\end{daycard}
+
+\end{document}

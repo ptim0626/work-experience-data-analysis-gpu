@@ -1,0 +1,11 @@
+1. Adam and Jamie Paint the Mona Lisa in 80 Milliseconds! (HD)
+
+https://www.youtube.com/watch?v=WmW6SD-EHVY
+
+2. NVIDIA CUDA Tutorial 4: Threads, Thread Blocks and Grids
+
+https://www.youtube.com/watch?v=kzXjRFL-gjo
+
+3. 03 - The CUDA Threading model | Nvidia CUDA Tutorial
+
+https://www.youtube.com/watch?v=dIebHer1Uzk

@@ -1,0 +1,150 @@
+\documentclass[11pt, a5paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[UKenglish]{babel}
+\usepackage{csquotes}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{geometry}
+\usepackage{tikz}
+\usepackage{tcolorbox}
+\usepackage{calc}
+\usepackage{microtype}
+
+% define colours
+\definecolor{colorprimary}{HTML}{667eea}
+\definecolor{colorprimarydark}{HTML}{5a67d8}
+\definecolor{colorsurface}{HTML}{f7fafc}
+\definecolor{colortextprimary}{HTML}{2d3748}
+\definecolor{colortextsecondary}{HTML}{a0aec0}
+
+% page setup for A5
+\geometry{
+    paperwidth=148mm,
+    paperheight=210mm,
+    margin=0mm,
+    noheadfoot
+}
+
+% set spacing
+\frenchspacing
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+
+% tcb setting
+\tcbuselibrary{skins}
+
+% define custom tcolorbox style for questions
+\newtcolorbox{questionbox}[1]{
+    enhanced,
+    colback=colorsurface,
+    colframe=colorsurface,
+    boxrule=0pt,
+    arc=2mm,
+    left=3mm,
+    right=3mm,
+    top=8mm,
+    bottom=3mm,
+    before skip=4mm,
+    after skip=0mm,
+    overlay={
+        \node[circle, fill=colorprimary, text=white, font=\bfseries,
+              minimum size=7.5mm, inner sep=0pt]
+              at ([yshift=-1mm,xshift=7mm]frame.north west) {#1};
+    }
+}
+
+% metadata
+\title{Introduction Card -- GPU Work Experience}
+\author{Timothy Poon}
+\date{}
+
+\begin{document}
+
+% center the card on the page
+\vspace*{\fill}
+\begin{center}
+
+% main card container
+\begin{tcolorbox}[
+    width=138mm,
+    height=200mm,
+    colback=white,
+    colframe=black!20,  % Light gray border
+    boxrule=0.5pt,
+    arc=3.75mm,
+    shadow={0mm}{-2mm}{4mm}{black!10},
+    left=5mm,
+    right=5mm,
+    top=5mm,
+    bottom=15mm,  % Increased bottom padding for footer
+    enhanced,
+    overlay={
+        \node[anchor=south, inner sep=0pt] at ([yshift=5mm]frame.south) {
+            \footnotesize
+            \itshape
+            \color{colortextsecondary}
+            Data analysis: Scientific image processing by GPU
+        };
+    }
+]
+
+% instruction box
+\begin{tcolorbox}[
+    colback=white,
+    colframe=colorprimarydark,
+    boxrule=0.5mm,
+    arc=2mm,
+    center title,
+    halign=center,
+    left=3mm,
+    right=3mm,
+    top=3mm,
+    bottom=3mm
+]
+    \color{colorprimarydark}
+    \small
+    Please select 2--3 questions to help introduce yourself to the group
+\end{tcolorbox}
+
+\vspace{5mm}
+
+% questions
+\begin{questionbox}{1}
+    \color{colortextprimary}
+    Please introduce yourself with your name and the school you attend.
+\end{questionbox}
+
+\begin{questionbox}{2}
+    \color{colortextprimary}
+    What is your experience with programming, if any? Please note that no prior experience is required for this programme.
+\end{questionbox}
+
+\begin{questionbox}{3}
+    \color{colortextprimary}
+    What aspects of GPU computing or parallel processing interest you most?
+\end{questionbox}
+
+\begin{questionbox}{4}
+    \color{colortextprimary}
+    Do you have any experience with image processing or computational techniques? What are your thoughts on how digital image manipulation works?
+\end{questionbox}
+
+\begin{questionbox}{5}
+    \color{colortextprimary}
+    What motivated you to apply for this work experience opportunity at Diamond Light Source?
+\end{questionbox}
+
+\end{tcolorbox}
+
+\end{center}
+\vspace*{\fill}
+
+\end{document}

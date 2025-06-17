@@ -1,0 +1,214 @@
+\documentclass[10pt, a4paper, landscape]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[UKenglish]{babel}
+\usepackage{csquotes}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{geometry}
+\usepackage{multicol}
+\usepackage{array}
+\usepackage{colortbl}
+\usepackage{tcolorbox}
+
+% page setup for single landscape A4 page with minimal margins
+\geometry{
+    a4paper,
+    landscape,
+    margin=10mm,
+    top=10mm,
+    bottom=10mm
+}
+
+% remove page numbering
+\pagenumbering{gobble}
+
+% spacing
+\frenchspacing
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+
+% reduce spacing between sections
+\usepackage{titlesec}
+\titlespacing{\section}{0pt}{11pt}{11pt}
+\titleformat{\section}{\normalfont\large\bfseries}{\thesection}{0pt}{}
+
+% color definitions
+\definecolor{navigation}{RGB}{0,102,204}
+\definecolor{files}{RGB}{0,136,0}
+\definecolor{careful}{RGB}{204,0,0}
+\definecolor{help}{RGB}{102,102,153}
+\definecolor{tipbg}{RGB}{232,244,248}
+\definecolor{tipborder}{RGB}{0,102,204}
+\definecolor{warningbg}{RGB}{255,238,238}
+\definecolor{warningborder}{RGB}{204,0,0}
+
+% custom commands
+\newcommand{\cmd}[2]{\textcolor{#1}{\textbf{\texttt{#2}}}}
+\newcommand{\placeholder}[1]{\texttt{<#1>}}
+
+% reduce table spacing even more
+\renewcommand{\arraystretch}{0.8}
+
+% custom environments for boxes with minimal padding
+\tcbset{
+    boxsep=0.5mm,
+    left=1mm,
+    right=1mm,
+    top=0.5mm,
+    bottom=0.5mm,
+    arc=0.5mm
+}
+
+\newtcolorbox{tipbox}{
+    colback=tipbg,
+    colframe=tipborder,
+    boxrule=1pt,
+    fontupper=\footnotesize
+}
+
+\newtcolorbox{warningbox}{
+    colback=warningbg,
+    colframe=warningborder,
+    boxrule=1pt,
+    fontupper=\footnotesize
+}
+
+\title{\Large Basic Terminal Commands Reference}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+% reduce space after title
+\vspace{-12mm}
+
+\begin{center}
+\begin{tcolorbox}[
+    colback=gray!10,
+    colframe=gray!50,
+    boxrule=0.5pt,
+    width=\textwidth,
+    arc=0.5mm,
+    boxsep=1mm,
+    fontupper=\footnotesize
+]
+\textbf{Convention:} Words in angle brackets like \colorbox{gray!20}{\texttt{<FILENAME>}} are placeholders -- replace them with actual names when typing commands.
+\end{tcolorbox}
+\end{center}
+
+\vspace{-3mm}
+
+\begin{multicols}{2}
+\footnotesize % smaller font for entire content
+
+% first column
+\section*{Essential Navigation}
+
+\begin{tabular}{@{}p{2.5cm}p{3.5cm}p{4cm}@{}}
+\toprule
+\textbf{Command} & \textbf{What it does} & \textbf{Example} \\
+\midrule
+\cmd{navigation}{pwd} & Where am I? (print working directory) & \scriptsize\texttt{\$ pwd}\\
+& & \scriptsize\texttt{/home/<FEDID>/projects}\\[1pt]
+\cmd{navigation}{ls} & What's here? (list files) & \scriptsize\texttt{\$ ls}\\
+& & \scriptsize\texttt{file1.txt folder1 script.py}\\[1pt]
+\cmd{navigation}{ls -la} & Show everything! (detailed list with hidden files) & \scriptsize\texttt{\$ ls -la}\\
+& & \scriptsize\texttt{drwxr-xr-x 2 <FEDID> <GROUP> Jun 13 .}\\[1pt]
+\cmd{navigation}{cd \placeholder{DIRNAME}} & Go to directory (change directory) & \scriptsize\texttt{\$ cd projects}\\
+& & \scriptsize\texttt{\$ pwd}\\
+& & \scriptsize\texttt{/home/<FEDID>/projects}\\[1pt]
+\cmd{navigation}{cd ..} & Go up one level & \scriptsize\texttt{\$ cd ..}\\
+& & \scriptsize\texttt{\$ pwd}\\
+& & \scriptsize\texttt{/home/<FEDID>}\\[1pt]
+\cmd{navigation}{cd} & Go home (to your home directory) & \scriptsize\texttt{\$ cd}\\
+& & \scriptsize\texttt{\$ pwd}\\
+& & \scriptsize\texttt{/home/<FEDID>}\\[1pt]
+\cmd{navigation}{mkdir \placeholder{NAME}} & Create new folder (make directory) & \scriptsize\texttt{\$ mkdir gpu\_work}\\
+& & \scriptsize\texttt{\$ ls}\\
+& & \scriptsize\texttt{gpu\_work}\\
+\bottomrule
+\end{tabular}
+
+\vspace{1mm}
+\begin{tipbox}
+\textbf{Pro Tip:} Press Tab to auto-complete filenames and directory names!
+\end{tipbox}
+
+\section*{Useful Combinations}
+
+\begin{tabular}{@{}p{2.5cm}p{3.5cm}p{4cm}@{}}
+\toprule
+\cmd{files}{ls -lh} & Show file sizes in human-readable format & \scriptsize\texttt{\$ ls -lh}\\
+& & \scriptsize\texttt{-rw-r--r-- 1.2M data.h5}\\[1pt]
+\cmd{files}{cp -r \placeholder{DIR1} \placeholder{DIR2}} & Copy entire directories & \scriptsize\texttt{\$ cp -r gpu\_work backup/}\\[1pt]
+\cmd{navigation}{cd -} & Go back to previous directory & \scriptsize\texttt{\$ cd -}\\
+& & \scriptsize\texttt{/home/<FEDID>/olddir}\\
+\bottomrule
+\end{tabular}
+
+\columnbreak
+
+% second column
+\section*{File Operations}
+
+\begin{tabular}{@{}p{2.8cm}p{3.5cm}p{3.7cm}@{}}
+\toprule
+\textbf{Command} & \textbf{What it does} & \textbf{Example} \\
+\midrule
+\cmd{files}{cat \placeholder{FILE}} & Show file contents (all at once) & \scriptsize\texttt{\$ cat hello.py}\\
+& & \scriptsize\texttt{print("Hello GPU!")}\\[1pt]
+\cmd{files}{less \placeholder{FILE}} & Show file page by page (q to quit) & \scriptsize\texttt{\$ less large\_data.txt}\\
+& & \scriptsize\texttt{(Use arrows to navigate)}\\[1pt]
+\cmd{files}{cp \placeholder{SOURCE} \placeholder{DEST}} & Copy file & \scriptsize\texttt{\$ cp script.py backup.py}\\
+& & \scriptsize\texttt{\$ ls}\\
+& & \scriptsize\texttt{script.py backup.py}\\[1pt]
+\cmd{files}{mv \placeholder{OLD} \placeholder{NEW}} & Move/rename file & \scriptsize\texttt{\$ mv old\_name.txt new\_name.txt}\\
+& & \scriptsize\texttt{\$ mv file.txt ../folder/}\\[1pt]
+\cmd{careful}{rm \placeholder{FILE}} & Delete file (careful!) & \scriptsize\texttt{\$ rm unwanted.txt}\\
+& & \scriptsize\texttt{(File is permanently deleted)}\\[1pt]
+\cmd{files}{nano \placeholder{FILE}} & Edit file (simple text editor) & \scriptsize\texttt{\$ nano script.py}\\
+& & \scriptsize\texttt{(Ctrl+O to save, Ctrl+X to exit)}\\
+\bottomrule
+\end{tabular}
+
+\vspace{1mm}
+\begin{warningbox}
+\textbf{Warning:} No recycle bin! Deleted files are gone forever.
+\end{warningbox}
+
+\section*{Getting Help}
+
+\begin{tabular}{@{}p{2.8cm}p{3.5cm}p{3.7cm}@{}}
+\toprule
+\textbf{Command} & \textbf{What it does} & \textbf{Example} \\
+\midrule
+\cmd{help}{man \placeholder{COMMAND}} & Show manual page for command & \scriptsize\texttt{\$ man ls}\\
+& & \scriptsize\texttt{(Press q to quit)}\\[1pt]
+\cmd{help}{\placeholder{COMMAND} -{}-help} & Show quick help for command & \scriptsize\texttt{\$ ls -{}-help}\\
+& & \scriptsize\texttt{Usage: ls [OPTION]... [FILE]...}\\
+\bottomrule
+\end{tabular}
+
+\vspace{1mm}
+\begin{tipbox}
+\textbf{Pro Tip:} Nobody can remember all the options for every command! Good programmers know where to find information quickly. Use man pages and -{}-help liberally.
+\end{tipbox}
+
+\end{multicols}
+
+\vspace{1mm}
+\begin{center}
+\rule{\textwidth}{0.4pt}\\[1mm]
+\footnotesize\textit{Data Analysis: Scientific image processing by GPU}
+\end{center}
+
+\end{document}

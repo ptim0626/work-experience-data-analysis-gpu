@@ -1,0 +1,168 @@
+\documentclass[11pt, a4paper, landscape]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[UKenglish]{babel}
+\usepackage{csquotes}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage{multicol}
+\usepackage{geometry}
+\usepackage{tabularx}
+\usepackage{fancybox}
+\usepackage{tcolorbox}
+\usepackage{array}
+
+% page setup for landscape A4 with tight margins
+\geometry{
+    landscape,
+    margin=10mm,
+    top=8mm,
+    bottom=8mm
+}
+
+% remove page numbering
+\pagenumbering{gobble}
+
+% spacing adjustments
+\frenchspacing
+\setlength{\parskip}{3pt}
+\setlength{\parindent}{0pt}
+
+% custom colours
+\definecolor{darkblue}{RGB}{44, 62, 80}
+\definecolor{lightblue}{RGB}{52, 152, 219}
+\definecolor{darkgray}{RGB}{51, 51, 51}
+\definecolor{lightgray}{RGB}{236, 240, 241}
+\definecolor{tipsbg}{RGB}{232, 244, 248}
+\definecolor{yellow}{RGB}{255, 235, 59}
+
+% custom commands for keyboard shortcuts
+\newcommand{\key}[1]{\colorbox{darkblue}{\color{white}\texttt{\footnotesize\textbf{#1}}}}
+
+% listings setup for code
+\lstset{
+    basicstyle=\ttfamily\small,
+    backgroundcolor=\color{darkblue},
+    commentstyle=\color{white},
+    keywordstyle=\color{white},
+    stringstyle=\color{white},
+    frame=single,
+    rulecolor=\color{darkblue}
+}
+
+% reduce spacing in lists
+\setlist{topsep=2pt, itemsep=1pt, parsep=1pt}
+
+\begin{document}
+
+% title
+\begin{center}
+    {\LARGE\textbf{Nano Editor Quick Reference Guide}}\\[3pt]
+    {\small\color{gray}Data Analysis: Scientific image processing by GPU}
+\end{center}
+
+\vspace{3pt}
+
+% main content in two columns
+\begin{minipage}[t]{0.48\textwidth}
+    % section 1: opening nano
+    \begin{tcolorbox}[colback=lightgray!30, colframe=gray!50, title={\textbf{1. Opening Nano}}, fonttitle=\normalsize\bfseries]
+        \vspace{-5pt}
+        \colorbox{darkblue}{\makebox[\linewidth][l]{\color{white}\texttt{\$ nano filename.py}}}
+
+        \vspace{3pt}
+        \textbf{What is a buffer?} In nano, a buffer is the temporary working space where your file content is held while editing. Changes are made to the buffer, not directly to the file, until you save.
+
+        \vspace{5pt}
+        % nano window representation with labels
+        \begin{minipage}{\textwidth}
+            \hfill\colorbox{yellow}{\color{black}\footnotesize\textbf{Title Bar (shows filename)}}
+
+            \vspace{1pt}
+            \begin{tcolorbox}[colback=black, colframe=darkgray, boxrule=1pt, arc=2pt, left=0pt, right=0pt, top=0pt, bottom=0pt]
+                \colorbox{darkgray}{\makebox[\linewidth][l]{\color{white}\footnotesize\texttt{GNU nano 5.4 \hspace{20pt} filename.py}}}
+
+                \vspace{2pt}
+                \color{white}\ttfamily\footnotesize
+                \# Your Python code goes here\\
+                print("Hello, World!")\\
+                \fcolorbox{white}{black}{\rule{0em}{0.8em}\hspace{0.1em}}\\
+                \\
+                \\
+                \# More Python codes\ldots\hfill\colorbox{yellow}{\color{black}\footnotesize\textbf{Edit Area (where you type)}}
+
+                \vspace{5pt}
+                \colorbox{darkgray}{\makebox[\linewidth][l]{\color{white}\footnotesize\texttt{\^{}G Help~~\^{}O Write Out~~\^{}W Where Is~~\^{}K Cut~~\^{}X Exit}}}
+            \end{tcolorbox}
+
+            \vspace{1pt}
+            \hfill\colorbox{yellow}{\color{black}\footnotesize\textbf{Bottom Menu (shows shortcuts)}}
+        \end{minipage}
+    \end{tcolorbox}
+
+    \vspace{8pt}
+
+    % section 2: essential shortcuts
+    \begin{tcolorbox}[colback=lightgray!30, colframe=gray!50, title={\textbf{2. Essential Shortcuts}}, fonttitle=\normalsize\bfseries]
+        \vspace{-5pt}
+        \begin{tabularx}{\textwidth}{@{}X@{\hspace{8pt}}X@{}}
+            \key{Ctrl+O} Save file (Write Out) & \key{Ctrl+X} Exit nano \\[2pt]
+            \key{Ctrl+K} Cut current line & \key{Ctrl+U} Paste line \\[2pt]
+            \key{Ctrl+W} Search in file & \key{Ctrl+\textbackslash} Search and replace \\[2pt]
+            \key{Ctrl+G} Display help & \key{Ctrl+C} Show cursor position \\[2pt]
+            \key{Alt+U} Undo last action & \key{Alt+E} Redo last undone action \\[2pt]
+            \key{Ctrl+A} Jump to beginning of line & \key{Ctrl+E} Jump to end of line
+        \end{tabularx}
+    \end{tcolorbox}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.48\textwidth}
+    % section 3: common tasks
+    \begin{tcolorbox}[colback=lightgray!30, colframe=gray!50, title={\textbf{3. Common Tasks}}, fonttitle=\normalsize\bfseries]
+        \begin{itemize}[leftmargin=*]
+            \item[\textcolor{lightblue}{$>$}] \textbf{Creating new file:}\\
+                \texttt{nano newfile.py}
+            \item[\textcolor{lightblue}{$>$}] \textbf{Editing existing file:}\\
+                \texttt{nano existingfile.py}
+            \item[\textcolor{lightblue}{$>$}] \textbf{Open with proper Python indentation:}\\
+                \texttt{nano -ET4 filename.py}\\
+                {\footnotesize\textit{Converts tabs to 4 spaces automatically}}
+            \item[\textcolor{lightblue}{$>$}] \textbf{Save and exit:}\\
+                Press \key{Ctrl+O}, then \key{Enter}, then \key{Ctrl+X}
+            \item[\textcolor{lightblue}{$>$}] \textbf{Exit without saving:}\\
+                Press \key{Ctrl+X}, then \key{N}
+            \item[\textcolor{lightblue}{$>$}] \textbf{Find text:}\\
+                Press \key{Ctrl+W}, type search term, press \key{Enter}
+        \end{itemize}
+        \vspace{28pt}
+    \end{tcolorbox}
+
+    \vspace{8pt}
+
+    % important tips section
+    \begin{tcolorbox}[colback=tipsbg, colframe=lightblue, boxrule=1.5pt, title={\textbf{Important Tips}}, fonttitle=\normalsize\bfseries]
+        \begin{itemize}[leftmargin=*, label=\textcolor{lightblue}{$\bullet$}]
+            \item \textbf{\^{}} means the \key{Ctrl} key
+            \item \textbf{M-} means the \key{Alt} key
+            \item Arrow keys work normally for navigation
+            \item No mouse support - keyboard only!
+            \item Modified files show \textbf{[Modified]} in the title bar
+            \item For Python files, always use \texttt{nano -ET4} to ensure proper indentation
+            \item Press \key{Ctrl+G} anytime for detailed help
+        \end{itemize}
+    \end{tcolorbox}
+\end{minipage}
+
+\vfill
+\begin{center}
+    \footnotesize\color{gray}Nano Editor Quick Reference Guide
+\end{center}
+
+\end{document}
