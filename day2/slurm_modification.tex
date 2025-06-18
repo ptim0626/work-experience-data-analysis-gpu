@@ -1,0 +1,135 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[UKenglish]{babel}
+\usepackage{csquotes}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage[a4paper, margin=2cm]{geometry}
+\frenchspacing
+
+% remove page numbering
+\pagenumbering{gobble}
+
+% code block configuration
+\lstset{
+    basicstyle=\ttfamily\small,
+    breaklines=true,
+    frame=single,
+    xleftmargin=2em,
+    framexleftmargin=1.5em,
+    showstringspaces=false,
+    extendedchars=false,
+    upquote=true,
+    literate={--}{{-{}-}}2,
+    language={}
+}
+
+% inline code command
+\newcommand{\code}[1]{\texttt{#1}}
+
+% no indent
+\usepackage[parfill]{parskip}
+
+\begin{document}
+
+\section*{Common Slurm Script Modifications}
+
+\subsection*{Changing Time Limits}
+
+For longer jobs, modify the \code{-{}-time} parameter:
+
+\begin{lstlisting}
+#SBATCH --time=00:30:00    # 30 minutes
+#SBATCH --time=01:00:00    # 1 hour
+#SBATCH --time=02:30:00    # 2 hours 30 minutes
+\end{lstlisting}
+
+\textbf{Important}: Always request slightly more time than you expect to need. If your job exceeds the time limit, it will be terminated.
+
+\subsection*{Requesting Specific GPU Types}
+
+To request a specific GPU model, use the \code{-{}-constraint} flag:
+
+\begin{lstlisting}
+#SBATCH --constraint=NVIDIA_P100    # request P100 GPU
+#SBATCH --constraint=NVIDIA_V100    # request V100 GPU
+\end{lstlisting}
+
+\subsection*{Running Multiple Python Scripts}
+
+\begin{lstlisting}
+# run scripts in sequence
+python gpu_hello_world.py
+python gpu_median_filter.py
+python gpu_gaussian_filter.py
+\end{lstlisting}
+
+Stop if any script fails:
+
+\begin{lstlisting}
+# stop on first error
+set -e
+
+python gpu_hello_world.py
+echo "First script completed"
+
+python gpu_median_filter.py
+echo "Second script completed"
+
+python gpu_gaussian_filter.py
+echo "Third script completed"
+\end{lstlisting}
+
+\subsection*{Memory Requirements}
+
+Adjust memory based on your data size:
+
+\begin{lstlisting}
+#SBATCH --mem=8G     # small datasets
+#SBATCH --mem=32G    # medium datasets
+#SBATCH --mem=64G    # large datasets
+\end{lstlisting}
+
+\subsection*{Interactive Development}
+
+For testing and debugging, you could request an interactive session:
+
+\begin{lstlisting}
+# request interactive gpu session (run in terminal, not as script)
+srun --partition=cs05r --gpus-per-task=1 --mem=16G --time=01:00:00 --pty bash
+\end{lstlisting}
+
+\subsection*{Monitoring Your Jobs}
+
+Useful commands while your job is running:
+
+\begin{lstlisting}
+# check job status
+squeue --me
+
+# check detailed job information
+scontrol show job <JOB_ID>
+
+# cancel a job
+scancel <JOB_ID>
+\end{lstlisting}
+
+\subsection*{Best Practices}
+
+\begin{enumerate}
+    \item \textbf{Start Small}: Test with short time limits and small data first
+    \item \textbf{Check the Queue}: Get an idea of how busy the HPC system is
+    \item \textbf{Save Outputs}: Always save processed data to files
+    \item \textbf{Use Modules}: Always load required modules in your script
+    \item \textbf{Clean Up}: Remove temporary files at the end of your script
+\end{enumerate}
+
+\end{document}
