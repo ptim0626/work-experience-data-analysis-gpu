@@ -62,3 +62,25 @@ Students use the prepared guide to log into the HPC system.
 
 ## Afternoon (13:00 - 17:00)
 
+### (13:00 - 14:00) First CUDA Program on HPC
+
+#### Activity
+
+Students are given the pre-written cupy "hello world" raw kernel example.
+
+- Learn to submit it using sbatch (with a simple submission script provided).
+- Learn to check job status (squeue) and view output (cat/tail).
+- Modify a very simple part of the "hello world" (e.g., the constant value
+being added, the size of the array) and re-run.
+
+#### Materials
+
+- Complete CuPy raw kernel example with extensive comments (gpu\_hello\_world.py
+and kernel\_add\_constant.cu)
+- Same CuPy raw kernel for addding numbers to bigger array to demonstrate
+speed-up (gpu\_big\_array.py)
+- CuPy raw kerenl for multiplication to demonstrate differet operation
+(gpu\_multiply.py and kernel\_multiply.cu)
+- Template Slurm submission script with explanations (submit\_job.sh)
+- Practical modification guide for submitting Slurm jobs
+(slurm\_modification.pdf)
