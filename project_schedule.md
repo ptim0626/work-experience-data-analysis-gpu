@@ -84,3 +84,44 @@ speed-up (gpu\_big\_array.py)
 - Template Slurm submission script with explanations (submit\_job.sh)
 - Practical modification guide for submitting Slurm jobs
 (slurm\_modification.pdf)
+
+### (14:00 - 16:30) Understanding Kernels on the CPU (Part 1)
+
+#### Activity
+
+Introduces the concept of a "kernel" as the core computation repeated for each
+data element.
+
+- Students work with the prepared notebooks in CPU for 1D array operations
+(e.g. adding a constant).
+- Run the notebook, observe input/output.
+- Examine the code, focusing on the loop and the "per-element" calculation and
+helper functions.
+- Modify parameters (e.g. the constant value, array size) and observe effects.
+
+Introduce 1D median/Gaussian filter and pixel binning on the CPU.
+
+- Examine the code, especially the windowing/neighborhood logic and edge
+handling.
+- Modify parameters (window size, Gaussian sigma, binning factor).
+
+#### Materials
+
+- Notebook showing the concept of kernel in 1D by adding constant to an array
+(cpu\_kernel\_add\_constant.ipynb)
+- Notebook showing the concept of different 1D kernel operations
+(cpu\_kernels\_1d\_basic.ipynb)
+- Notebook showing the implementation of 1D median filter with edge handling
+(cpu\_median\_filter\_1d.ipynb)
+- Notebook showing the implementation of 1D Gaussian filter with edge handling
+(cpu\_gaussian\_filter\_1d.ipynb)
+- Notebook showing the implementation of 1D pixel binning with signal-to-noise
+ratio calculation (cpu\_binning\_1d.ipynb)
+
+### (16:30 - 17:00) Q&A and wrap-up
+
+Review what was learnt.
+
+- What do you think about today? (overwhelming/too complicated or easy)
+- Address any outstanding questions.
+- Briefly outline Day 3 (morning only).
