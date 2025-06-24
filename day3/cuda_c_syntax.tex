@@ -1,0 +1,334 @@
+\documentclass[11pt, a4paper]{article}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[UKenglish]{babel}
+\usepackage{csquotes}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{enumitem}
+\usepackage[a4paper, margin=12mm]{geometry}
+\frenchspacing
+
+% remove page numbering
+\pagenumbering{gobble}
+
+% uniform spacing after punctuation
+\frenchspacing
+
+% no indent
+\usepackage[parfill]{parskip}
+
+% custom commands
+\newcommand{\code}[1]{\texttt{#1}}
+
+% code block configuration
+\lstset{
+    basicstyle=\ttfamily\small,
+    commentstyle=\ttfamily\upshape,
+    breaklines=true,
+    frame=single,
+    xleftmargin=2em,
+    framexleftmargin=1.5em,
+    showstringspaces=false,
+    extendedchars=false,
+    upquote=true,
+    literate={--}{{-{}-}}2,
+    language={}
+}
+
+\begin{document}
+
+\begin{center}
+    {\LARGE\textbf{Essential C Syntax for CUDA Kernels}}\\[0.5em]
+    {\large A Reference Guide for Python Programmers}
+\end{center}
+
+\vspace{1em}
+
+\section*{Introduction}
+
+CuPy raw kernels allow you to write custom GPU operations using CUDA C code
+embedded as strings within Python. Understanding basic C syntax is essential
+because:
+
+\begin{itemize}
+    \item GPUs execute compiled C/C++ code, not Python.
+    \item Raw kernels provide finer control over parallel computation.
+    \item Custom operations can be optimised for specific data patterns.
+\end{itemize}
+
+This guide covers the essential C syntax needed for writing CUDA kernels in
+CuPy.
+
+\section*{Basic Data Types}
+
+\subsection*{C Types and NumPy Equivalents}
+
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+C Type & NumPy Equivalent & Size (bytes) & Range/Notes \\
+\midrule
+\code{char} & \code{np.int8} & 1 & -128 to 127 \\
+\code{unsigned char} & \code{np.uint8} & 1 & 0 to 255 \\
+\code{int} & \code{np.int32} & 4 & $-2^{31}$ to $2^{31}-1$ \\
+\code{unsigned int} & \code{np.uint32} & 4 & 0 to $2^{32}-1$ \\
+\code{float} & \code{np.float32} & 4 & \textasciitilde{}7 decimal digits \\
+\code{double} & \code{np.float64} & 8 & \textasciitilde{}15 decimal digits \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Numeric Literals}
+
+\begin{lstlisting}[language=C]
+// floating-point suffixes
+float x = 1.0f;     // f suffix for float
+double y = 1.0;     // no suffix defaults to double
+
+// integer suffixes
+unsigned int a = 10u;    // u suffix for unsigned
+long long b = 100ll;     // ll suffix for long long
+\end{lstlisting}
+
+\section*{Variable Declaration}
+
+\subsection*{C Declaration Syntax}
+
+\begin{lstlisting}[language=C]
+// C requires type declaration
+int x;              // declaration without initialisation
+int y = 5;          // declaration with initialisation
+float z = 3.14f;    // float literal needs 'f' suffix
+
+// multiple declarations
+int a, b, c;        // declare multiple variables
+int d = 1, e = 2;   // initialise multiple variables
+\end{lstlisting}
+
+\subsection*{Python vs C Comparison}
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+Python & C \\
+\midrule
+\code{x = 5} & \code{int x = 5;} \\
+\code{y = 3.14} & \code{float y = 3.14f;} \\
+\code{name = "gpu"} & \code{char name[] = "gpu";} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section*{Operators}
+
+\subsection*{Arithmetic Operators}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+Operator & Description & Example \\
+\midrule
+\code{+} & Addition & \code{a + b} \\
+\code{-} & Subtraction & \code{a - b} \\
+\code{*} & Multiplication & \code{a * b} \\
+\code{/} & Division & \code{a / b} \\
+\code{\%} & Modulo (remainder) & \code{a \% b} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Important:} Integer division truncates in C:
+\begin{lstlisting}[language=C]
+int result = 7 / 2;             // result is 3, not 3.5
+float precise = 7.0f / 2.0f;    // result is 3.5f
+\end{lstlisting}
+
+\subsection*{Comparison Operators}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+Operator & Description & Example \\
+\midrule
+\code{==} & Equal to & \code{a == b} \\
+\code{!=} & Not equal to & \code{a != b} \\
+\code{<} & Less than & \code{a < b} \\
+\code{>} & Greater than & \code{a > b} \\
+\code{<=} & Less than or equal & \code{a <= b} \\
+\code{>=} & Greater than or equal & \code{a >= b} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Logical Operators}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+Operator & Description & Python Equivalent \\
+\midrule
+\code{\&\&} & Logical AND & \code{and} \\
+\code{||} & Logical OR & \code{or} \\
+\code{!} & Logical NOT & \code{not} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{lstlisting}[language=C]
+// C logical operations
+if (x > 0 && x < 10) { }     // both conditions must be true
+if (x < 0 || x > 100) { }    // either condition can be true
+if (!done) { }               // if not done
+\end{lstlisting}
+
+\section*{Control Flow Structures}
+
+\subsection*{If/Else Statements}
+
+\begin{lstlisting}[language=C]
+// basic if statement
+if (x > 0) {
+    y = x * 2;
+}
+
+// if-else
+if (temperature > 30.0f) {
+    state = 1;  // hot
+} else if (temperature > 20.0f) {
+    state = 2;  // warm
+} else {
+    state = 3;  // cold
+}
+\end{lstlisting}
+
+\subsection*{For Loops}
+
+\begin{lstlisting}[language=C]
+// standard for loop
+for (int i = 0; i < n; ++i) {
+    array[i] = i * 2;
+}
+\end{lstlisting}
+
+\textbf{Note:} In CUDA kernels, parallel threads replace traditional loops.
+
+\section*{Array Access and Pointers}
+
+\subsection*{Basic Array Indexing}
+
+\begin{lstlisting}[language=C]
+// array access is similar to python
+float value = array[index];
+array[index] = new_value;
+
+// 2d array access (linearised)
+int row = 2, col = 3, width = 10;
+float element = array[row * width + col];
+\end{lstlisting}
+
+\subsection*{Pointer Basics}
+
+\begin{lstlisting}[language=C]
+// in cuda kernels, arrays are passed as pointers
+__global__ void kernel(float* input, float* output) {
+    int idx = threadIdx.x + blockIdx.x * blockDim.x;
+    output[idx] = input[idx] * 2.0f;
+}
+\end{lstlisting}
+
+\section*{Type Casting}
+
+\begin{lstlisting}[language=C]
+// explicit type casting
+int a = 5;
+float b = (float)a;         // cast int to float
+
+// implicit casting (be careful!)
+float x = 5;                // int 5 becomes 5.0f
+int y = 3.14f;              // float 3.14f becomes 3
+
+// common casting scenarios
+int idx = (int)floorf(x);   // float to int with floor
+float ratio = (float)a / (float)b;  // ensure float division
+\end{lstlisting}
+
+\section*{Common Pitfalls for Python Programmers}
+
+\subsection*{1. Semicolons Are Required}
+\begin{lstlisting}[language=C]
+int x = 5;    // correct
+int y = 10    // error: missing semicolon
+\end{lstlisting}
+
+\subsection*{2. Variable Declaration Is Mandatory}
+\begin{lstlisting}[language=C]
+// python: x = 5
+// C: must declare type
+int x = 5;
+\end{lstlisting}
+
+\subsection*{3. Array Bounds Not Checked}
+\begin{lstlisting}[language=C]
+float arr[10];
+float value = arr[20];    // undefined behaviour!
+\end{lstlisting}
+
+\subsection*{4. Integer Division Truncates}
+\begin{lstlisting}[language=C]
+int result = 7 / 2;           // result is 3
+float correct = 7.0f / 2.0f;  // result is 3.5f
+\end{lstlisting}
+
+\subsection*{5. Boolean Type Differences}
+\begin{lstlisting}[language=C]
+// C uses 0 for false, non-zero for true
+if (x) { }     // true if x != 0
+if (!x) { }    // true if x == 0
+\end{lstlisting}
+
+\section*{Practical CUDA Kernel Examples}
+
+\subsection*{Example 1: Add Constant}
+\begin{lstlisting}[language=C]
+__global__ void add_constant(float* data, float constant,
+                            int n) {
+    int idx = threadIdx.x + blockIdx.x * blockDim.x;
+    if (idx < n) {
+        data[idx] = data[idx] + constant;
+    }
+}
+\end{lstlisting}
+
+\subsection*{Example 2: Element-wise Multiplication}
+\begin{lstlisting}[language=C]
+__global__ void multiply_arrays(float* a, float* b,
+                               float* result, int n) {
+    int idx = threadIdx.x + blockIdx.x * blockDim.x;
+    if (idx < n) {
+        result[idx] = a[idx] * b[idx];
+    }
+}
+\end{lstlisting}
+
+\subsection*{Example 3: 2D Array Access}
+\begin{lstlisting}[language=C]
+__global__ void process_2d(float* input, float* output,
+                          int width, int height) {
+    int x = threadIdx.x + blockIdx.x * blockDim.x;
+    int y = threadIdx.y + blockIdx.y * blockDim.y;
+
+    if (x < width && y < height) {
+        int idx = y * width + x;
+        output[idx] = input[idx] * 2.0f;
+    }
+}
+\end{lstlisting}
+
+\end{document}
