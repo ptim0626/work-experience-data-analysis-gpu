@@ -125,3 +125,71 @@ Review what was learnt.
 - What do you think about today? (overwhelming/too complicated or easy)
 - Address any outstanding questions.
 - Briefly outline Day 3 (morning only).
+
+# Day 3: GPU Kernels
+
+Date: 2025-07-02
+
+Room: MR 1-10 (i14 external building)
+
+Time: 09:00 - 12:00, with breaks at least once an hour.
+
+## Morning (09:00 - 12:00)
+
+### (09:00 - 09:30) Arrival and settling
+
+### (09:30 - 10:30) Understanding Kernels on the CPU (Part 2)
+
+#### Activity
+
+Students work with the prepared notebooks for 2D image operations
+(e.g., brightness adjustment, median filter, Gaussian filter, pixel binning on
+small dummy images).
+
+- Focus on how 2D loops translate to processing each pixel.
+- Discuss 2D windowing and edge handling strategies.
+- Visualise "before" and "after" images using matplotlib.
+- Modify parameters and observe effects.
+
+#### Materials
+
+- Notebook showing the concept of kernel in 2D by adjusting brightness
+(cpu\_brightness\_adjust.ipynb)
+- Notebook showing the concept of different 2D kernel operations
+(cpu\_kernels\_2d\_basics.ipynb)
+- Notebook showing the implementation of 2D median filter with edge handling
+(cpu\_median\_filter\_2d.ipynb)
+- Notebook showing the implementation of 2D Gaussian filter with edge handling
+(cpu\_gaussian\_filter\_2d.ipynb)
+- Notebook showing the implementation of 2D pixel binning with signal-to-noise
+ratio calculation (cpu\_binning\_2d.ipynb)
+
+### (10:30 - 11:30) Transition to GPU Kernels with CuPy
+
+#### Activity
+
+Review the CuPy "hello world" raw kernel, specifically the C kernel string.
+
+- Introduce basic C syntax needed within the kernel (variable declaration,
+arithmetic).
+- Explain CUDA thread indexing: threadIdx.x, blockIdx.x, blockDim.x etc.
+- Explain how each thread maps to a data element.
+
+#### Materials
+
+- Essential C syntax for CUDA kernel (cuda\_c\_syntax.tex)
+- Notebook to visualise thread indexing (threads\_indexing.ipynb)
+- Notebook to illustrate components of CUDA kernel with examples
+(kernel\_anatomy.ipynb)
+
+### (11:30 - 12:00) Q&A and wrap-up
+
+Review what was learnt.
+
+- What do you think about today? (overwhelming/too complicated or easy)
+- Address any outstanding questions.
+- Briefly outline Day 4.
+
+## Lunch Break (12:00 - 13:00)
+
+## No afternoon work
