@@ -68,7 +68,7 @@ def simulated_noisy_image_stack(num_images=10, height=512, width=512,
             stack[i] = noisy_image
 
     stack = stack.astype(np.float32)
-    print(f"Number of bytes of the stack: {stack.size/2**30:.4f} GiB.")
+    print(f"Number of bytes of the stack: {stack.nbytes/2**30:.4f} GiB.")
 
     return stack
 
