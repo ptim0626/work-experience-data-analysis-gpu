@@ -16,7 +16,7 @@
 #SBATCH --nodes=1                # number of compute nodes
 #SBATCH --ntasks=1               # number of tasks
 #SBATCH --cpus-per-task=4        # cpu cores per task
-#SBATCH --gpus-per-task=1        # number of gpus per task
+#SBATCH --gpus-per-node=1        # number of gpus per node
 #SBATCH --mem=16G                # total memory per node
                                  # use G for gigabytes, M for megabytes
 

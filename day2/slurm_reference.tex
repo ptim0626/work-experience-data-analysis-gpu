@@ -133,7 +133,7 @@ JOBID~~PARTITION~~NAME~~~~~USER~~~ST~~TIME~~~~~NODES\\
 \#SBATCH -{}-job-name=my\_gpu\_job \hspace{8mm} \= \# name for your job\\
 \#SBATCH -{}-partition=cs05r \> \# GPU partition\\
 \#SBATCH -{}-time=00:10:00 \> \# time limit (HH:MM:SS)\\
-\#SBATCH -{}-gpus-per-task=1 \> \# request 1 GPU\\
+\#SBATCH -{}-gpus-per-node=1 \> \# request 1 GPU\\
 \#SBATCH -{}-mem=8G \> \# memory required\\
 \\
 \# load any required modules here\\

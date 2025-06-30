@@ -104,7 +104,7 @@ For testing and debugging, you could request an interactive session:
 
 \begin{lstlisting}
 # request interactive gpu session (run in terminal, not as script)
-srun --partition=cs05r --gpus-per-task=1 --mem=16G --time=01:00:00 --pty bash
+srun --partition=cs05r --gpus-per-node=1 --mem=16G --time=01:00:00 --pty bash
 \end{lstlisting}
 
 \subsection*{Monitoring Your Jobs}
