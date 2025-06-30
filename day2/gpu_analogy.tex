@@ -13,6 +13,7 @@
 \usepackage{listings}
 \usepackage{enumitem}
 \usepackage[a4paper, margin=2cm]{geometry}
+\usepackage[parfill]{parskip}
 
 % remove page numbering
 \pagenumbering{gobble}
@@ -32,7 +33,7 @@
 }
 
 % document metadata
-\title{The Mega Restaurant: Understanding GPU Parallel Processing}
+\title{Understanding GPU Parallel Processing: An Analogy}
 \author{}
 \date{}
 
@@ -40,16 +41,18 @@
 
 \maketitle
 
-\section*{Welcome to MegaBites Restaurant}
+\section*{A Big Restaurant}
 
-Imagine the world's largest restaurant with \textbf{1000 tables}, all occupied by hungry customers who have ordered simultaneously. Everyone expects prompt service. How can we efficiently serve them all?
+Imagine there is a restaurant with \textbf{1000 tables}, all occupied
+by hungry customers who have ordered simultaneously. Everyone expects prompt
+service. How can we efficiently serve them all?
 
 \subsection*{Option 1: The CPU Approach - \enquote{The Super-Waiter}}
 \begin{itemize}
     \item ONE exceptionally fast waiter
     \item Runs between all 1000 tables sequentially
     \item Takes one order, rushes to kitchen, delivers food, proceeds to next table
-    \item Even at superhuman speed: 1000 tables × 2 minutes each = \textbf{over 33 hours}
+    \item Even at superhuman speed: 1000 tables x 2 minutes each = \textbf{over 33 hours}
     \item Customers at table 1000 would experience unacceptable waiting times
 \end{itemize}
 
@@ -102,7 +105,8 @@ Every waiter follows this \textbf{identical} service protocol:
     \item All executing simultaneously
 \end{itemize}
 
-In GPU terms: Each thread executes the same kernel code but operates on different data elements.
+In GPU terms: Each thread executes the same kernel code but operates on
+different data elements.
 
 \section*{Visual Representation: Parallel Service Timeline}
 
@@ -137,21 +141,12 @@ Time 00:02 - All serving food simultaneously
 
 \section*{GPU Computing: The Numbers}
 
-\textbf{Technical Specifications:}
-\begin{itemize}
-    \item Modern GPUs contain \textbf{10,000+ parallel processing threads}
-    \item NVIDIA RTX 4090: 16,384 CUDA cores
-    \item Processing a 4K image (8.3 million pixels): Each pixel receives dedicated processing
-    \item Typical performance: Billions of operations per second
-    \item Beamline application: Each X-ray detector pixel represents one \enquote{table} requiring service
-\end{itemize}
+\textbf{Performance Comparison:} A calculation requiring one hour on a CPU
+might complete in just two minutes on a GPU. This represents a 30x speed
+improvement through parallel processing.
 
-\textbf{Performance Comparison:} A calculation requiring one hour on a CPU might complete in just two minutes on a GPU. This represents a 30× speed improvement through parallel processing.
-
-\par\noindent\rule{\linewidth}{0.4pt}\par
-
-\textbf{Key Concept:} GPUs excel when identical operations must be performed on large datasets - precisely like our restaurant scenario where every table requires the same service procedure but with unique customer orders.
-
-\textit{This parallel processing approach is fundamental to accelerating scientific image analysis at Diamond Light Source, where millions of detector pixels must be processed rapidly.}
+\textbf{Key Concept:} GPUs excel when identical operations must be performed on
+large datasets - precisely like our restaurant scenario where every table
+requires the same service procedure but with unique customer orders.
 
 \end{document}
