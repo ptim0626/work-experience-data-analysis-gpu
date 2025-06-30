@@ -193,3 +193,38 @@ Review what was learnt.
 ## Lunch Break (12:00 - 13:00)
 
 ## No afternoon work
+
+# Day 4: GPU Kernels for Image Processing
+
+Date: 2025-07-03
+
+Room: G53
+
+Time: 09:00 - 17:00, with breaks at least once an hour.
+
+## Morning (09:00 - 12:00)
+
+### (09:00 - 09:30) Arrival and settling
+
+### (09:30 - 12:00) 2D GPU Kernels
+
+#### Activity
+
+Students adapt CPU 1D and 2D kernels to write 2D CuPy GPU raw kernels for
+common image processing operations.
+
+- Focus on translating the "per-element" Python logic into the C kernel string,
+using thread indexing to select the element.
+- Run on HPC, verify correctness against CPU version.
+
+#### Materials
+
+For each of the following 2D operations, there is a template for students to
+start with and a completed script as a reference:
+
+- brightness adjustment
+- median filter
+- Gaussian filter
+- pixel binning
+
+## Lunch Break (12:00 - 13:00)
