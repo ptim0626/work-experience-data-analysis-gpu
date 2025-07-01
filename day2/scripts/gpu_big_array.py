@@ -58,12 +58,12 @@ def main():
     cpu_result = cpu_data.copy()
 
     # time the CPU version
-    cpu_start = time.time()
+    cpu_start = time.perf_counter()
     # traditional loop - what GPU replaces
     # not using NumPy vectorisation for demo purpose
     for i in range(array_size):
         cpu_result[i] = cpu_result[i] + 10.0
-    cpu_end = time.time()
+    cpu_end = time.perf_counter()
     cpu_time = cpu_end - cpu_start
 
     print(f"CPU completed in {cpu_time:.4f} seconds")
@@ -75,9 +75,9 @@ def main():
 
     # copy data to GPU
     print("Transferring data to GPU...")
-    transfer_start = time.time()
+    transfer_start = time.perf_counter()
     gpu_data = cp.asarray(cpu_data)
-    transfer_time = time.time() - transfer_start
+    transfer_time = time.perf_counter() - transfer_start
     print(f"Transfer time: {transfer_time:.4f} seconds")
 
     # configure GPU execution
@@ -95,7 +95,7 @@ def main():
     # ensure previous operations complete
     cp.cuda.Stream.null.synchronize()
 
-    kernel_start = time.time()
+    kernel_start = time.perf_counter()
     add_kernel(
         (blocks_per_grid,),
         (threads_per_block,),
@@ -103,16 +103,16 @@ def main():
     )
     # wait for kernel to complete
     cp.cuda.Stream.null.synchronize()
-    kernel_end = time.time()
+    kernel_end = time.perf_counter()
     kernel_time = kernel_end - kernel_start
 
     print(f"Kernel execution time: {kernel_time:.4f} seconds")
 
     # copy results back
     print("\nTransferring results back...")
-    transfer_back_start = time.time()
+    transfer_back_start = time.perf_counter()
     gpu_result = cp.asnumpy(gpu_data)
-    transfer_back_time = time.time() - transfer_back_start
+    transfer_back_time = time.perf_counter() - transfer_back_start
     print(f"Transfer back time: {transfer_back_time:.4f} seconds")
 
     # total GPU time
