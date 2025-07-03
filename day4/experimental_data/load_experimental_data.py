@@ -30,7 +30,7 @@ def load_i14_merlin(fpath, in_row_of=None):
             # return in chunks
             shape = f["/entry/merlin_addetector/data"].shape
             nr, nc = shape[0], shape[1]
-            row_chunks =  nr // in_row_of + 1
+            row_chunks =  (nr + in_row_of - 1) // in_row_of
 
             nr_start = 0
             nr_end = in_row_of
@@ -69,7 +69,7 @@ def load_i14_excalibur(fpath, in_chunk_of=None):
             # return in chunks
             shape = f["/entry/excalibur_addetector/data"].shape
             nimg = shape[0]
-            nimg_chunks =  nimg // in_chunk_of + 1
+            nimg_chunks =  (nimg + in_chunk_of - 1) // in_chunk_of
 
             start = 0
             end = in_chunk_of
