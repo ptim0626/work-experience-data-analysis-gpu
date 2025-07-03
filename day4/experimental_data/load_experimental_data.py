@@ -17,13 +17,15 @@ def load_i14_merlin(fpath, in_row_of=None):
 
     Returns
     -------
-    the Merlin stack in np.float32.
+    the Merlin stack in np.float32 and size of x axis in scanning coordinate
+    (for reshaping purpose). If it is a generator, it also returns the
+    start and end row indices if it is load in row chunk.
     """
     with h5py.File(fpath, "r") as f:
         if in_row_of is None:
             # return all data
             data = f["/entry/merlin_addetector/data"][()]
-            return data.reshape(-1, 512, 512).astype(np.float32)
+            return data.reshape(-1, 512, 512).astype(np.float32), data.shape[1]
         else:
             # return in chunks
             shape = f["/entry/merlin_addetector/data"].shape
@@ -34,7 +36,10 @@ def load_i14_merlin(fpath, in_row_of=None):
             nr_end = in_row_of
             for k in range(row_chunks):
                 data = f["/entry/merlin_addetector/data"][nr_start:nr_end, ...]
-                yield data.reshape(-1, 512, 512).astype(np.float32)
+                yield (data.reshape(-1, 512, 512).astype(np.float32),
+                       data.shape[1],
+                       nr_start,
+                       nr_end)
                 nr_start = nr_end
                 nr_end += in_row_of
 
