@@ -228,3 +228,72 @@ start with and a completed script as a reference:
 - pixel binning
 
 ## Lunch Break (12:00 - 13:00)
+
+## Afternoon (13:00 - 17:00)
+
+### (13:00 - 16:30) Run GPU Kernel Operations on Experimental Data
+
+#### Activity
+
+Students adapt their 2D GPU kernels (e.g. median filter, Gaussian filter, pixel
+binning - choose one or two based on progress) to work with the real data.
+
+- Run these GPU kernels on full or subsections of the experimental data.
+- Explore the trade-off between CPU and GPU processing.
+- Visualise the effect of the images after processing.
+
+#### Materials
+
+- Dataset from i14 (Merlin/Eiger/Excalibur)
+- Dataset from i13-1 (Eiger)
+- Additional functions to load experimental data
+
+### (16:30 - 17:00) Q&A and wrap-up
+
+Review what was learnt.
+
+- What do you think about today? (overwhelming/too complicated or easy)
+- Address any outstanding questions.
+- Briefly outline Day 5.
+
+# Day 5: Presentation
+
+Date: 2025-07-04
+
+Room: MR 1.25 (Zone 2)
+
+Time: 09:00 - 12:00, with breaks at least once an hour.
+
+## Morning (09:00 - 12:00)
+
+### (09:00 - 09:30) Arrival and settling
+
+### (09:30 - 12:00) Presentation preparation and practice
+
+#### Activity
+
+Provide an outline/template as a guidance.
+
+- Students discuss and decide on content for each section.
+- Select their best "before and after" images.
+- Choose 1-2 small, understandable snippets of CuPy kernel code they worked on.
+- Mock presentation and some feedback on it.
+
+#### Materials
+
+- Some figures or diagrams explaining the basic of GPU and image filtering
+- "before" and "after" images to illustrate the effect of image filters
+
+## Lunch Break (12:00 - 13:00)
+
+## Afternoon (13:00 - 16:00)
+
+#### Activity
+
+Presentation by the students.
+
+- Congratulate the students on their achievement!
+
+#### Materials
+
+- slides (pptx and pdf)
